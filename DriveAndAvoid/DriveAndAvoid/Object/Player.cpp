@@ -22,7 +22,7 @@ Player::~Player()
 void Player::Initialize()
 {
 	is_active = true;
-	location = Vector2D(320.0f, 380.0f);
+	location = Vector2D(150.0f, 400.0f);
 	box_size = Vector2D(31.0f, 60.0f);
 	angle = 0.0f;
 	speed = 3.0f;
@@ -99,6 +99,8 @@ void Player::Draw()
 {
 	//プレイヤー画像の描画
 	DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+	DrawFormatString(400, 350, GetColor(255, 255, 255), "%f", location.x);
+	DrawFormatString(400, 370, GetColor(255, 255, 255), "%f", location.y);
 
 	//バリアが生成されていたら、描画を行う
 	if (barrier != nullptr)
@@ -192,29 +194,29 @@ void Player::Movement()
 	angle = 0.0f;
 
 	//十字移動処理
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
 	{
-		move += Vector2D(-1.0f, 0.0f);
+		move += Vector2D(-100.0f, 0.0f);
 		angle = -DX_PI_F / 18;
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
 	{
-		move += Vector2D(1.0f, 0.0f);
+		move += Vector2D(100.0f, 0.0f);
 		angle = DX_PI_F / 18;
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
 	{
-		move += Vector2D(0.0f, -1.0f);
+		move += Vector2D(0.0f, -150.0f);
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
-		move += Vector2D(0.0f, 1.0f);
+		move += Vector2D(0.0f, 150.0f);
 	}
 
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 640.f - 180.0f) ||
+	if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
 		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
