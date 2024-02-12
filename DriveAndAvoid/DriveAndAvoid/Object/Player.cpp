@@ -5,7 +5,7 @@
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
-						speed(0.0f), hp(0.0f), fuel(0.0f), barrier_count(0),
+						speed(0.0f), barrier_count(0),
 barrier(nullptr)
 {
 
@@ -14,7 +14,7 @@ barrier(nullptr)
 
 Player::~Player()
 {
-
+	
 }
 
 
@@ -25,9 +25,7 @@ void Player::Initialize()
 	location = Vector2D(150.0f, 400.0f);
 	box_size = Vector2D(31.0f, 60.0f);
 	angle = 0.0f;
-	speed = 3.0f;
-	hp = 1000;
-	fuel = 6000;
+	speed = 6.0f;//プレイヤーの速度デフォルト5
 	barrier_count = 3;
 
 	//画像の読み込み
@@ -57,14 +55,10 @@ void Player::Update()
 		return;
 	}
 
-	//燃料の消費
-	fuel -= speed;
-
+	
 	//移動処理
 	Movement();
 
-	//加減速処理
-	Acceleration();
 
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
@@ -131,13 +125,6 @@ void Player::SetActive(bool flg)
 }
 
 
-//体力減少処理
-void Player::DecreaseHp(float value)
-{
-	this->hp += value;
-}
-
-
 //位置情報取得処理
 Vector2D Player::GetLocation()const
 {
@@ -156,20 +143,6 @@ Vector2D Player::GetBoxSize()const
 float Player::GetSpeed()const
 {
 	return this->speed;
-}
-
-
-//燃料取得処理
-float Player::GetFuel()const
-{
-	return this->fuel;
-}
-
-
-//体力取得処理
-float Player::GetHp()const
-{
-	return this->hp;
 }
 
 
@@ -224,18 +197,3 @@ void Player::Movement()
 }
 
 
-//加減速処理
-void Player::Acceleration()
-{
-	//LBボタンが押されたら、減速する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_LEFT_SHOULDER) && speed > 1.0f)
-	{
-		speed -= 1.0f;
-	}
-
-	//RBボタンが押されたら、加速する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_RIGHT_SHOULDER) && speed < 10.0f)
-	{
-		speed += 1.0f;
-	}
-}
