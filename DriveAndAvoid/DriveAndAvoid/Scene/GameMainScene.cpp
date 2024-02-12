@@ -23,6 +23,8 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
+    timer = 0;
+
     //高得点値を読み込む
     ReadHighScore();
 
@@ -113,8 +115,9 @@ eSceneType GameMainScene::Update()
         }
     }
 
-    //プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-    if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
+    timer += 0.01;
+    //制限時間を超えたらリザルトに遷移する
+    if (timer>=60)
     {
         return eSceneType::E_RESULT;
     }
@@ -178,6 +181,9 @@ void GameMainScene::Draw()const
         GetColor(255, 0, 0), TRUE);
     DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
         FALSE);
+
+    //デバッグ用
+    DrawFormatString(0, 0, GetColor(0, 0, 0), "Time:%f",timer);
 }
 
 
