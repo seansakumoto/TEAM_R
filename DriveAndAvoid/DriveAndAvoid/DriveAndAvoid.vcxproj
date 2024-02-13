@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
     <ClCompile Include="Object\UI.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
     <ClCompile Include="Scene\HelpScene.cpp" />
     <ClCompile Include="Scene\RankingDispScene.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Object\RankingData.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\TitleScene.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Utility\InputControl.h" />
     <ClInclude Include="Utility\Vector2D.h" />
   </ItemGroup>
