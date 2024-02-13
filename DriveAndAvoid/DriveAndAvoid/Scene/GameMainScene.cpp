@@ -76,49 +76,6 @@ eSceneType GameMainScene::Update()
     //移動距離の更新
     mileage += (int)player->GetSpeed() + 5;
 
-    //敵生成処理
-    if (mileage / 20 % 100 == 0)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            if (enemy[i] == nullptr)
-            {
-                int type = GetRand(3) % 3;
-                enemy[i] = new Enemy(type, enemy_image[type]);
-                enemy[i]->Initialize();
-                break;
-            }
-        }
-    }
-
-    //敵の更新と当たり判定チェック
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Updata(player->GetSpeed());
-
-            //画面外に行ったら、敵を削除してスコア加算
-            if (enemy[i]->GetLocation().y >= 640.0f)
-            {
-                enemy_count[enemy[i]->GetType()]++;
-                enemy[i]->Finalize();
-                delete enemy[i];
-                enemy[i] = nullptr;
-            }
-
-            //当たり判定の確認
-            if (IsHitCheck(player, enemy[i]))
-            {
-                player->SetActive(false);
-                //player->DecreaseHp(-50.0f);
-                enemy[i]->Finalize();
-                delete enemy[i];
-                enemy[i] = nullptr;
-            }
-        }
-    }
-
 
     //制限時間を超えたらリザルトに遷移する
     if (ui->GetTimeFlg()==true)
@@ -247,12 +204,4 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
         return false;
     }
 
-    //位置情報の差分を取得
-    Vector2D diff_location = p->GetLocation() - e->GetLocation();
-
-    //当たり判定サイズの大きさを取得
-    Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-
-    //コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-    return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
