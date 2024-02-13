@@ -3,8 +3,7 @@
 #include "DxLib.h"
 
 
-
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),muteki(0),
 angle(0.0f),
 						speed(0.0f), barrier_count(0),
 barrier(nullptr)
@@ -23,10 +22,10 @@ Player::~Player()
 void Player::Initialize()
 {
 	is_active = true;
-	location = Vector2D(150.0f, 400.0f);
+	location = Vector2D(640.0f/5.0f, 480.0f/5.0f*4);
 	box_size = Vector2D(31.0f, 60.0f);
 	angle = 0.0f;
-	speed = 6.0f;//プレイヤーの速度デフォルト5
+	speed = 7.0f;//プレイヤーの速度デフォルト5
 	barrier_count = 3;
 
 	//画像の読み込み
@@ -40,20 +39,24 @@ void Player::Initialize()
 }
 
 
-
 //更新処理
 void Player::Update()
 {
 	//操作不可状態であれば、自身を回転させる
 	if (!is_active)
 	{
-		angle += DX_PI_F / 24.0f;
+		/*angle += DX_PI_F / 24.0f;
 		speed = 1.0f;
 		if (angle >= DX_PI_F * 4.0f)
 		{
 			is_active = true;
 		}
-		return;
+		return;*/
+		if (barrier == nullptr)
+		{
+			barrier = new Barrier;
+			muteki = 0;
+		}
 	}
 
 
@@ -67,23 +70,24 @@ void Player::Update()
 	}
 
 	//バリア処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
+	/*if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
 	{
 		if (barrier == nullptr)
 		{
-			barrier_count--;
 			barrier = new Barrier;
 		}
-	}
+	}*/
 
 	//バリアが生成されていたら、更新を行う
 	if (barrier != nullptr)
 	{
+		muteki++;
 		//バリア時間が経過したか？していたら、削除する
 		if (barrier->IsFinished(this->speed))
 		{
 			delete barrier;
 			barrier = nullptr;
+			is_active = true;
 		}
 	}
 }
@@ -93,23 +97,32 @@ void Player::Update()
 void Player::Draw()
 {
 	//プレイヤー画像の描画
-	DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
-	DrawFormatString(400, 350, GetColor(255, 255, 255), "%f", location.x);
-	DrawFormatString(400, 370, GetColor(255, 255, 255), "%f", location.y);
-
-	// スティックの移動量を取得する
-	Vector2D stickInput = InputControl::GetLeftStick();
-
-	// スティックの移動量を表示する
-	DrawFormatString(400, 390, GetColor(255, 255, 255), "Stick X: %f", stickInput.x);
-	DrawFormatString(400, 410, GetColor(255, 255, 255), "Stick Y: %f", stickInput.y);
-
-
-	//バリアが生成されていたら、描画を行う
 	if (barrier != nullptr)
 	{
-		barrier->Draw(this->location);
+		if (muteki % 2 != 0)
+		{
+			DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+		}
+		else
+		{
+			//DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);
+		}
 	}
+	else
+	{
+		DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+	}
+	/*DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);*/
+	
+
+	/*DrawFormatString(400, 350, GetColor(255, 255, 255), "%f", location.x);
+	DrawFormatString(400, 370, GetColor(255, 255, 255), "%f", location.y);*/
+
+	////バリアが生成されていたら、描画を行う
+	//if (barrier != nullptr)
+	//{
+	//	barrier->Draw(this->location);
+	//}
 }
 
 
@@ -172,6 +185,10 @@ bool Player::IsBarrier()const
 //移動処理
 void Player::Movement()
 {
+	Vector2D move = Vector2D(0.0f);
+	float MoveSizeX = 640 / 5;
+	float MoveSizeY = 480 / 5;
+	angle = 0.0f;
 	//
 	//
 	//Vector2D move = Vector2D(0.0f);
@@ -218,26 +235,33 @@ void Player::Movement()
 
 	Vector2D move = Vector2D(moveXAmount, moveYAmount); // スティックの移動量
 
-	// 十字キーの入力を取得する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT)) {
-		move.x -= 100.0f; // 十字キーの左入力に応じて移動する量を減らす
+	//十字移動処理
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
+	{
+		move += Vector2D(-MoveSizeX, 0.0f);
+		angle = -DX_PI_F / 18;
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT)) {
-		move.x += 100.0f; // 十字キーの右入力に応じて移動する量を増やす
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
+	{
+		move += Vector2D(MoveSizeX, 0.0f);
+		angle = DX_PI_F / 18;
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP)) {
-		move.y -= 150.0f; // 十字キーの上入力に応じて移動する量を減らす
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
+	{
+		move += Vector2D(0.0f, -MoveSizeY);
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN)) {
-		move.y += 150.0f; // 十字キーの下入力に応じて移動する量を増やす
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
+	{
+		move += Vector2D(0.0f, MoveSizeY);
 	}
 
 	// プレイヤーキャラクターの位置を更新する
 	location += move;
 
-	// 画面外に行かないように制限する
-	if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
-		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y)) {
+	//画面外に行かないように制限する
+	if ((location.x <= 0.0f) || (location.x >= 640.0f) ||
+		(location.y <=0.0f) || (location.y >= 480.0f))
+	{
 		location -= move;
 	}
 

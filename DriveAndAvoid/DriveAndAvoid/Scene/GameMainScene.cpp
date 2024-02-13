@@ -106,7 +106,7 @@ eSceneType GameMainScene::Update()
             //“–‚½‚è”»’è‚ÌŠm”F
             if (IsHitCheck(player, enemy[i]))
             {
-                //player->SetActive(false);
+                player->SetActive(false);
                 //player->DecreaseHp(-50.0f);
                 enemy[i]->Finalize();
                 delete enemy[i];
