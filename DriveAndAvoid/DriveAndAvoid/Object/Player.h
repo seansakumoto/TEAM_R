@@ -17,6 +17,8 @@ private:
 	int barrier_count;  //バリアの枚数
 	Barrier* barrier;   //バリア
 
+
+
 public:
 	Player();
 	~Player();
@@ -39,5 +41,8 @@ public:
 private:
 	void Movement();                 //移動処理
 	void Acceleration();             //加速処理
+
 };
+
+
 

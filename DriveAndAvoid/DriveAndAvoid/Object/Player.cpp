@@ -3,6 +3,7 @@
 #include "DxLib.h"
 
 
+
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
 						speed(0.0f), barrier_count(0),
@@ -55,7 +56,7 @@ void Player::Update()
 		return;
 	}
 
-	
+
 	//移動処理
 	Movement();
 
@@ -95,6 +96,14 @@ void Player::Draw()
 	DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
 	DrawFormatString(400, 350, GetColor(255, 255, 255), "%f", location.x);
 	DrawFormatString(400, 370, GetColor(255, 255, 255), "%f", location.y);
+
+	// スティックの移動量を取得する
+	Vector2D stickInput = InputControl::GetLeftStick();
+
+	// スティックの移動量を表示する
+	DrawFormatString(400, 390, GetColor(255, 255, 255), "Stick X: %f", stickInput.x);
+	DrawFormatString(400, 410, GetColor(255, 255, 255), "Stick Y: %f", stickInput.y);
+
 
 	//バリアが生成されていたら、描画を行う
 	if (barrier != nullptr)
@@ -163,37 +172,75 @@ bool Player::IsBarrier()const
 //移動処理
 void Player::Movement()
 {
-	Vector2D move = Vector2D(0.0f);
-	angle = 0.0f;
+	//
+	//
+	//Vector2D move = Vector2D(0.0f);
+	//angle = 0.0f;
 
-	//十字移動処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
-	{
-		move += Vector2D(-100.0f, 0.0f);
-		angle = -DX_PI_F / 18;
+	////十字移動処理
+	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
+	//{
+	//	move += Vector2D(-100.0f, 0.0f);
+	//	angle = -DX_PI_F / 18;
+	//}
+	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
+	//{
+	//	move += Vector2D(100.0f, 0.0f);
+	//	angle = DX_PI_F / 18;
+	//}
+	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
+	//{
+	//	move += Vector2D(0.0f, -150.0f);
+	//}
+	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
+	//{
+	//	move += Vector2D(0.0f, 150.0f);
+	//}
+
+	//location += move;
+
+
+	////画面外に行かないように制限する
+	//if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
+	//	(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	//{
+	//	location -= move;
+	//}
+
+    //スティックの入力を取得する
+	Vector2D stickInput = InputControl::GetLeftStick();
+
+	// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
+	float moveSpeed = 6.0f; // 移動速度を設定する
+
+	float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
+	float moveYAmount = stickInput.y * moveSpeed; // Y
+
+	Vector2D move = Vector2D(moveXAmount, moveYAmount); // スティックの移動量
+
+	// 十字キーの入力を取得する
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT)) {
+		move.x -= 100.0f; // 十字キーの左入力に応じて移動する量を減らす
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
-	{
-		move += Vector2D(100.0f, 0.0f);
-		angle = DX_PI_F / 18;
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT)) {
+		move.x += 100.0f; // 十字キーの右入力に応じて移動する量を増やす
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
-	{
-		move += Vector2D(0.0f, -150.0f);
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP)) {
+		move.y -= 150.0f; // 十字キーの上入力に応じて移動する量を減らす
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
-	{
-		move += Vector2D(0.0f, 150.0f);
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN)) {
+		move.y += 150.0f; // 十字キーの下入力に応じて移動する量を増やす
 	}
 
+	// プレイヤーキャラクターの位置を更新する
 	location += move;
 
-	//画面外に行かないように制限する
+	// 画面外に行かないように制限する
 	if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
-		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
-	{
+		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y)) {
 		location -= move;
 	}
+
 }
 
 
