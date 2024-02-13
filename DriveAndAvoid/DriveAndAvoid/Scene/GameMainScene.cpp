@@ -24,6 +24,8 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
+
+   
     timer = 0;
 
     //高得点値を読み込む
@@ -53,17 +55,18 @@ void GameMainScene::Initialize()
 
     //オブジェクトの生成
     player = new Player;
-    enemy = new Enemy * [10];
+    enemy = new Enemy;
     ui = new UI;
 
     //オブジェクトの初期化
     player->Initialize();
     ui->Initialize();
+    enemy->Initialize();
 
-    for (int i = 0; i < 10; i++)
-    {
-        enemy[i] = nullptr;
-    }
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    enemy[i] = nullptr;
+    //}
 }
 
 //更新処理
@@ -72,6 +75,9 @@ eSceneType GameMainScene::Update()
     //プレイヤーの更新
     player->Update();
     ui->Update();
+    // 敵の更新
+    enemy->Updata();
+
 
     //移動距離の更新
     mileage += (int)player->GetSpeed() + 5;
@@ -92,28 +98,22 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    //敵の描画
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Draw();
-        }
-    }
+    ////敵の描画
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    if (enemy[i] != nullptr)
+    //    {
+    //        enemy[i]->Draw();
+    //    }
+    //}
 
     //プレイヤーの描画
     player->Draw();
+    enemy->Draw();
     
    
 
-    //デバッグ用
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
-    //仮ハイスコア用
-    DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
-    //仮スピード用
-     DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
-     //仮走行距離用
-     DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
+   
      ui->Draw();
 }
 
@@ -157,17 +157,17 @@ void GameMainScene::Finalize()
     ui->Finalize();
     delete ui;
 
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Finalize();
-            delete enemy[i];
-            enemy[i] = nullptr;
-        }
-    }
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    if (enemy[i] != nullptr)
+    //    {
+    //        enemy[i]->Finalize();
+    //        delete enemy[i];
+    //        enemy[i] = nullptr;
+    //    }
+    //}
 
-    delete[] enemy;
+    //delete[] enemy;
 }
 
 //現在のシーン情報を取得
@@ -205,3 +205,5 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
     }
 
 }
+
+

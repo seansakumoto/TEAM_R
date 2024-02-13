@@ -1,21 +1,28 @@
 #pragma once
 
-#include "../Utility/Vector2D.h"
+
 
 class Enemy
-{private:
+{
+private:
+
+    // メンバー変数の宣言
+    int x; // x座標
+    int y; // y座標
+    int width; // 幅
+    int height; // 高さ
+    int speed; // 移動速度
+
+    int image;
+
+
 public:
-	Enemy();
-	~Enemy();
+    Enemy();
+    ~Enemy();
 
-	void Initialize();            //初期化処理
-	//void Updata(float speed);     //更新処理
-	void Updata(float speed);     //更新処理
-	void Draw()const;             //描画処理
-	void Finalize();              //終了時処理
+    void Initialize();
+    void Updata();
+    void Draw()const;
+    void Finalize();
 
-	//int GetType()const;           //タイプ取得
-	//Vector2D GetLocation()const;  //位置情報の取得
-	//Vector2D GetBoxSize()const;   //当たり判定の大きさを取得
 };
-

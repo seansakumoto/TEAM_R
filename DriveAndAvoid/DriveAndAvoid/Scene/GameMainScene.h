@@ -17,7 +17,7 @@ private:
 	int enemy_count[3];  //通り過ぎた敵カウント
 	float timer;
 	Player* player;      //プレイヤー
-	Enemy** enemy;       //敵
+	Enemy* enemy;       //敵
 	UI* ui;
 
 public:
@@ -30,6 +30,8 @@ public:
 	virtual void Finalize() override;
 
 	virtual eSceneType GetNowScene() const override;
+	void SetEnemy(Enemy* enemy); // Enemyオブジェクトへのポインタを受け取るメソッドの宣言
+	void DisplayTextOnBButtonPress() const; // Bボタンが押された際の文字表示メソッドの宣
 
 private:
 	//ハイスコア読み込み処理
