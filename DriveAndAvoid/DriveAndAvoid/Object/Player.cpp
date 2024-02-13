@@ -189,53 +189,19 @@ void Player::Movement()
 	float MoveSizeX = 640 / 5;
 	float MoveSizeY = 480 / 5;
 	angle = 0.0f;
-	//
-	//
-	//Vector2D move = Vector2D(0.0f);
-	//angle = 0.0f;
 
-	////十字移動処理
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
-	//{
-	//	move += Vector2D(-100.0f, 0.0f);
-	//	angle = -DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
-	//{
-	//	move += Vector2D(100.0f, 0.0f);
-	//	angle = DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
-	//{
-	//	move += Vector2D(0.0f, -150.0f);
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
-	//{
-	//	move += Vector2D(0.0f, 150.0f);
-	//}
+	// スティックの入力を取得する
+	Vector2D stickInput = InputControl::GetLeftStick();
 
-	//location += move;
+	// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
+	float moveSpeed = 6.0f; // 移動速度を設定する
 
+	float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
+	float moveYAmount = stickInput.y * moveSpeed; // Y
 
-	////画面外に行かないように制限する
-	//if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
-	//	(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
-	//{
-	//	location -= move;
-	//}
+	move += Vector2D(moveXAmount, moveYAmount); // スティックの移動量
 
- //   //スティックの入力を取得する
-	//Vector2D stickInput = InputControl::GetLeftStick();
-
-	//// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
-	//float moveSpeed = 6.0f; // 移動速度を設定する
-
-	//float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
-	//float moveYAmount = stickInput.y * moveSpeed; // Y
-
-	//Vector2D move = Vector2D(moveXAmount, moveYAmount); // スティックの移動量
-
-	//十字移動処理
+	// スティックの入力を処理した後に、十字キーの入力を処理する
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
 	{
 		move += Vector2D(-MoveSizeX, 0.0f);
@@ -258,9 +224,9 @@ void Player::Movement()
 	// プレイヤーキャラクターの位置を更新する
 	location += move;
 
-	//画面外に行かないように制限する
+	// 画面外に行かないように制限する
 	if ((location.x <= 0.0f) || (location.x >= 640.0f) ||
-		(location.y <=0.0f) || (location.y >= 480.0f))
+		(location.y <= 0.0f) || (location.y >= 480.0f))
 	{
 		location -= move;
 	}
