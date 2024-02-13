@@ -143,40 +143,14 @@ void GameMainScene::Draw()const
     //プレイヤーの描画
     player->Draw();
 
-    //UIの描画
-    DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
-    SetFontSize(16);
-    DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
-    DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
-    DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
-    for (int i = 0; i < 3; i++)
-    {
-        DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE, FALSE);
-        DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d", enemy_count[i]);
-    }
-    DrawFormatString(510, 200, GetColor(0, 0, 0), "走行距離");
-    DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d", mileage / 10);
-    DrawFormatString(510, 240, GetColor(0, 0, 0), "スピード");
-    DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",player->GetSpeed());
-
-    //バリア枚数の描画
-    for (int i = 0; i < player->GetBarrierCount(); i++)
-    {
-        DrawRotaGraph(520 + i * 25, 340, 0.2f, 0, barrier_image, TRUE, FALSE);
-    }
-
-    
-    ////体力ゲージの描画
-    //float fx = 510.0f;
-    //float fy = 430.0f;
-    //DrawFormatString(fx, fy, GetColor(0, 0, 0), "PLAYER HP");
-    //DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 100 / 1000), fy + 40.0f,
-    //    GetColor(255, 0, 0), TRUE);
-    //DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
-    //    FALSE);
-
     //デバッグ用
     DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
+    //仮ハイスコア用
+    DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
+    //仮スピード用
+     DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
+     //仮走行距離用
+     DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
 }
 
 
