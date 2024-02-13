@@ -8,6 +8,7 @@ barrier_image(NULL),
                                           mileage(0), player(nullptr),
 enemy(nullptr)
 {
+    
     for (int i = 0; i < 3; i++)
     {
         enemy_image[i] = NULL;
@@ -53,9 +54,11 @@ void GameMainScene::Initialize()
     //オブジェクトの生成
     player = new Player;
     enemy = new Enemy * [10];
+    ui = new UI;
 
     //オブジェクトの初期化
     player->Initialize();
+    ui->Initialize();
 
     for (int i = 0; i < 10; i++)
     {
@@ -68,6 +71,7 @@ eSceneType GameMainScene::Update()
 {
     //プレイヤーの更新
     player->Update();
+    ui->Update();
 
     //移動距離の更新
     mileage += (int)player->GetSpeed() + 5;
@@ -106,7 +110,7 @@ eSceneType GameMainScene::Update()
             //当たり判定の確認
             if (IsHitCheck(player, enemy[i]))
             {
-                //player->SetActive(false);
+                player->SetActive(false);
                 //player->DecreaseHp(-50.0f);
                 enemy[i]->Finalize();
                 delete enemy[i];
@@ -115,9 +119,9 @@ eSceneType GameMainScene::Update()
         }
     }
 
-    timer += 0.01;
+
     //制限時間を超えたらリザルトに遷移する
-    if (timer>=60)
+    if (ui->GetTimeFlg()==true)
     {
         return eSceneType::E_RESULT;
     }
@@ -142,6 +146,8 @@ void GameMainScene::Draw()const
 
     //プレイヤーの描画
     player->Draw();
+    
+   
 
     //デバッグ用
     DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
@@ -151,6 +157,7 @@ void GameMainScene::Draw()const
      DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
      //仮走行距離用
      DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
+     ui->Draw();
 }
 
 
@@ -190,6 +197,8 @@ void GameMainScene::Finalize()
     //動的確保したオブジェクトを削除する
     player->Finalize();
     delete player;
+    ui->Finalize();
+    delete ui;
 
     for (int i = 0; i < 10; i++)
     {

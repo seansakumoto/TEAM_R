@@ -3,6 +3,8 @@
 #include "SceneBase.h"
 #include "../Object/Player.h"
 #include "../Object/Enemy.h"
+#include "../Object/UI.h"
+
 
 class GameMainScene:public SceneBase
 {
@@ -16,6 +18,7 @@ private:
 	float timer;
 	Player* player;      //ƒvƒŒƒCƒ„[
 	Enemy** enemy;       //“G
+	UI* ui;
 
 public:
 	GameMainScene();
