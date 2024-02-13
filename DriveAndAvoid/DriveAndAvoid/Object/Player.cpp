@@ -172,41 +172,7 @@ bool Player::IsBarrier()const
 //移動処理
 void Player::Movement()
 {
-	//
-	//
-	//Vector2D move = Vector2D(0.0f);
-	//angle = 0.0f;
-
-	////十字移動処理
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
-	//{
-	//	move += Vector2D(-100.0f, 0.0f);
-	//	angle = -DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
-	//{
-	//	move += Vector2D(100.0f, 0.0f);
-	//	angle = DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
-	//{
-	//	move += Vector2D(0.0f, -150.0f);
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
-	//{
-	//	move += Vector2D(0.0f, 150.0f);
-	//}
-
-	//location += move;
-
-
-	////画面外に行かないように制限する
-	//if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
-	//	(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
-	//{
-	//	location -= move;
-	//}
-
+	
     //スティックの入力を取得する
 	Vector2D stickInput = InputControl::GetLeftStick();
 
