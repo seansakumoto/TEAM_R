@@ -4,9 +4,10 @@
 class UI
 {
 private:
-	
-	int image[3];
-
+	int Num[10];
+	int image;
+	int cnt;
+	bool timeFlg;
 public:
 	UI();
 	~UI();
@@ -18,6 +19,8 @@ public:
 
 
 public:
+
+	int GetTimeFlg();
 
 private:
 
