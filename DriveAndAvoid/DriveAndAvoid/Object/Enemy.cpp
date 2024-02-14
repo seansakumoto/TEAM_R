@@ -2,9 +2,7 @@
 #include "DxLib.h"
 #include"../Utility/InputControl.h"
 #include"../Scene/GameMainScene.h"
-
 #include <string>
-
 
 Enemy::Enemy()
 {
@@ -13,7 +11,7 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-
+   
 }
 
 void Enemy::Initialize()
@@ -35,7 +33,7 @@ void Enemy::Initialize()
     height = 75; // 障害物の高さ
 }
 
-void Enemy::Updata()
+void Enemy::Update()
 {
     // 障害物の移動処理
     y += speed; // y座標を下方向に移動する
@@ -57,7 +55,7 @@ void Enemy::Draw() const
     // 画像の現在の位置を表示する
     int drawX = x;
     int drawY = y - 20; // 画像の上に表示するために y 座標を調整する
-    std::string positionInfo = "X: " + std::to_string(x) + ", Y: " + std::to_string(y);
+    std::string positionInfo ="X:"+ std::to_string(x) +",Y:" + std::to_string(y);
     DrawString(drawX, drawY, positionInfo.c_str(), GetColor(255, 255, 255));
 }
 
@@ -65,4 +63,19 @@ void Enemy::Finalize()
 {
     // リソースの解放などの終了処理を行う
     DeleteGraph(image);
+}
+
+int Enemy::GetY() const {
+    return y;
+}
+
+int Enemy::GetX() const {
+    return x; // x 座標を返す
+
+
+}
+// 引数を受け取るコンストラクターの実装
+Enemy::Enemy(int initialX, int initialY) : x(initialX), y(initialY)
+{
+    // 引数で受け取った値を使った初期化処理
 }

@@ -4,6 +4,7 @@
 #include "../Object/Player.h"
 #include "../Object/Enemy.h"
 #include "../Object/UI.h"
+#include <vector> // 必要なヘッダーを追加
 
 
 class GameMainScene:public SceneBase
@@ -17,8 +18,9 @@ private:
 	int enemy_count[3];  //通り過ぎた敵カウント
 	float timer;
 	Player* player;      //プレイヤー
-	Enemy* enemy;       //敵
+	//Enemy* enemy;       //敵
 	UI* ui;
+	std::vector<Enemy*> enemy; // std::vector を使用する
 
 public:
 	GameMainScene();

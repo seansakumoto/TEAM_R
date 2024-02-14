@@ -3,21 +3,21 @@
 #include "DxLib.h"
 #include <math.h>
 
+#include"../Object/Enemy.h"
+
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),
-                                          mileage(0), player(nullptr),
-enemy(nullptr)
+mileage(0), player(nullptr), ui(nullptr)
 {
-    
-    for (int i = 0; i < 3; i++)
-    {
-        enemy_image[i] = NULL;
-        enemy_count[i] = NULL;
+    for (int i = 0; i < 4; i++) {
+        enemy.push_back(new Enemy());
     }
 }
 
+
 GameMainScene::~GameMainScene()
 {
+ 
 
 }
 
@@ -53,20 +53,17 @@ void GameMainScene::Initialize()
         throw("Resource/images/barrier.pngがありません\n");
     }
 
-    //オブジェクトの生成
+    // オブジェクトの生成
     player = new Player;
-    enemy = new Enemy;
     ui = new UI;
 
-    //オブジェクトの初期化
+    // オブジェクトの初期化
     player->Initialize();
     ui->Initialize();
-    enemy->Initialize();
 
-    //for (int i = 0; i < 10; i++)
-    //{
-    //    enemy[i] = nullptr;
-    //}
+    for (auto& e : enemy) {
+        e->Initialize();
+    }
 }
 
 //更新処理
@@ -75,9 +72,31 @@ eSceneType GameMainScene::Update()
     //プレイヤーの更新
     player->Update();
     ui->Update();
-    // 敵の更新
-    enemy->Updata();
 
+    // 敵との当たり判定を行う
+    for (auto& e : enemy) {
+        if (IsHitCheck(player, e)) {
+            // プレイヤーと敵が当たった場合の処理を記述
+            // 例えば、ゲームオーバー処理などを行う
+        }
+    }
+
+
+    for (auto& e : enemy) {
+        e->Update();
+    }
+
+    // 画面外に出た障害物を削除
+    enemy.erase(std::remove_if(enemy.begin(), enemy.end(), [](const Enemy* e) {
+        return e->GetY() > 500;
+        }), enemy.end());
+
+
+    // 画面外に出たら新しい障害物を生成
+    if (enemy.size() < 4 && timer > 60) {
+        enemy.push_back(new Enemy());
+        timer = 0;
+    }
 
     //移動距離の更新
     mileage += (int)player->GetSpeed() + 5;
@@ -98,23 +117,17 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    ////敵の描画
-    //for (int i = 0; i < 10; i++)
-    //{
-    //    if (enemy[i] != nullptr)
-    //    {
-    //        enemy[i]->Draw();
-    //    }
-    //}
+    // 敵の描画
+    for (const auto& e : enemy) {
+        e->Draw();
+    }
 
     //プレイヤーの描画
     player->Draw();
-    enemy->Draw();
-    
-   
+    ui->Draw();
 
-   
-     ui->Draw();
+    // 敵の数を表示
+    DrawFormatString(10, 10, GetColor(255, 255, 255), "Enemies: %d", enemy.size());
 }
 
 
@@ -156,6 +169,11 @@ void GameMainScene::Finalize()
     delete player;
     ui->Finalize();
     delete ui;
+    //delete ui;
+    for (auto& e : enemy) {
+        e->Finalize();
+        delete e;
+    }
 
     //for (int i = 0; i < 10; i++)
     //{
@@ -192,18 +210,28 @@ void GameMainScene::ReadHighScore()
 //当たり判定処理（プレイヤーと敵）
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-    //プレイヤーがバリアを張っていたら、当たり判定を無視する
+    // プレイヤーがバリアを張っていたら、当たり判定を無視する
     if (p->IsBarrier())
     {
         return false;
     }
 
-    //敵情報がなければ、当たり判定を無視する
+    // 敵情報がなければ、当たり判定を無視する
     if (e == nullptr)
     {
         return false;
     }
 
+    // プレイヤーと敵の当たり判定を行う
+ // ここでは簡易的な当たり判定として、プレイヤーの座標と障害物の座標が一致した場合に当たりとする
+    if (static_cast<int>(p->GetLocation().x) == e->GetX() && static_cast<int>(p->GetLocation().y) == e->GetY())
+    {
+        // 障害物に当たった場合の処理を行う
+        DrawString(0, 0, "障害物に当たりました！", GetColor(255, 255, 255)); // 画面に文字を描画
+        return true;
+    }
+
+    return false;
 }
 
 

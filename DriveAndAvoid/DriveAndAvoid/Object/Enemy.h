@@ -20,9 +20,14 @@ public:
     Enemy();
     ~Enemy();
 
+    // 引数を受け取るコンストラクター
+    Enemy(int initialX, int initialY);
+
     void Initialize();
-    void Updata();
+    void Update();
     void Draw()const;
     void Finalize();
 
+    int GetX() const; // X座標を取得するメソッド
+    int GetY() const; // Y座標を取得するメソッド
 };
