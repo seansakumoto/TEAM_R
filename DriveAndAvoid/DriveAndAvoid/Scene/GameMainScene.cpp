@@ -1,14 +1,14 @@
 #include "GameMainScene.h"
 #include "../Object/RankingData.h"
-#include "../Utility/InputControl.h"
 #include "DxLib.h"
 #include <math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), pause_flag(),
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),
                                           mileage(0), player(nullptr),
 enemy(nullptr)
 {
+    
     for (int i = 0; i < 3; i++)
     {
         enemy_image[i] = NULL;
@@ -24,6 +24,8 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
+    timer = 0;
+
     //高得点値を読み込む
     ReadHighScore();
 
@@ -32,6 +34,8 @@ void GameMainScene::Initialize()
     barrier_image = LoadGraph("Resource/images/barrier.png");
     int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,
         enemy_image);
+
+    BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
     //エラーチェック
     if (back_ground == -1)
@@ -52,90 +56,87 @@ void GameMainScene::Initialize()
     //オブジェクトの生成
     player = new Player;
     enemy = new Enemy * [10];
+    ui = new UI;
 
     //オブジェクトの初期化
     player->Initialize();
+    ui->Initialize();
 
     for (int i = 0; i < 10; i++)
     {
         enemy[i] = nullptr;
     }
-    //
-    pause_flag = TRUE;
-
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-    
+    if (CheckSoundMem(BGM) == false) {
 
-    if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-    {
-        pause_flag = !pause_flag;
+        PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
     }
+    //プレイヤーの更新
+    player->Update();
+    ui->Update();
 
-    if (pause_flag == TRUE)
+    //移動距離の更新
+    mileage += (int)player->GetSpeed() + 5;
+
+    //敵生成処理
+    if (mileage / 20 % 100 == 0)
     {
-       
-
-        //プレイヤーの更新
-        player->Update();
-
-        //移動距離の更新
-        mileage += (int)player->GetSpeed() + 5;
-
-        //敵生成処理
-        if (mileage / 20 % 100 == 0)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (enemy[i] == nullptr)
-                {
-                    int type = GetRand(3) % 3;
-                    enemy[i] = new Enemy(type, enemy_image[type]);
-                    enemy[i]->Initialize();
-                    break;
-                }
-            }
-        }
-
-        //敵の更新と当たり判定チェック
         for (int i = 0; i < 10; i++)
         {
-            if (enemy[i] != nullptr)
+            if (enemy[i] == nullptr)
             {
-                enemy[i]->Update(player->GetSpeed());
-
-                //画面外に行ったら、敵を削除してスコア加算
-                if (enemy[i]->GetLocation().y >= 640.0f)
-                {
-                    enemy_count[enemy[i]->GetType()]++;
-                    enemy[i]->Finalize();
-                    delete enemy[i];
-                    enemy[i] = nullptr;
-                }
-
-
-                //当たり判定の確認
-                if (IsHitCheck(player, enemy[i]))
-                {
-                    player->SetActive(false);
-                    player->DecreaseHp(-50.0f);
-                    enemy[i]->Finalize();
-                    delete enemy[i];
-                    enemy[i] = nullptr;
-                }
+                int type = GetRand(3) % 3;
+                enemy[i] = new Enemy(type, enemy_image[type]);
+                enemy[i]->Initialize();
+                break;
             }
         }
-        //プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-        if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
-        {
-            return eSceneType::E_RESULT;
-        }
-       
     }
-    
+
+    //敵の更新と当たり判定チェック
+    for (int i = 0; i < 10; i++)
+    {
+        if (enemy[i] != nullptr)
+        {
+            enemy[i]->Updata(player->GetSpeed());
+
+            //画面外に行ったら、敵を削除してスコア加算
+            if (enemy[i]->GetLocation().y >= 640.0f)
+            {
+                enemy_count[enemy[i]->GetType()]++;
+                enemy[i]->Finalize();
+                delete enemy[i];
+                enemy[i] = nullptr;
+            }
+
+            //当たり判定の確認
+            if (IsHitCheck(player, enemy[i]))
+            {
+                player->SetActive(false);
+                player->DecLife();
+                //player->DecreaseHp(-50.0f);
+                enemy[i]->Finalize();
+                delete enemy[i];
+                enemy[i] = nullptr;
+            }
+        }
+    }
+
+    //残機が0になるとリザルト画面に遷移する
+    if (player->GetLife() < 0)
+    {
+        return eSceneType::E_RESULT;
+    }
+
+    //制限時間を超えたらリザルトに遷移する
+    if (ui->GetTimeFlg()==true)
+    {
+        return eSceneType::E_RESULT;
+    }
     return GetNowScene();
 }
 
@@ -146,60 +147,29 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    if (pause_flag == TRUE) {
-        //敵の描画
-        for (int i = 0; i < 10; i++)
+    //敵の描画
+    for (int i = 0; i < 10; i++)
+    {
+        if (enemy[i] != nullptr)
         {
-            if (enemy[i] != nullptr)
-            {
-                enemy[i]->Draw();
-            }
+            enemy[i]->Draw();
         }
-
-        //プレイヤーの描画
-        player->Draw();
     }
 
-    //UIの描画
-    DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
-    SetFontSize(16);
-    DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
-    DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d", high_score);
-    DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
-    for (int i = 0; i < 3; i++)
-    {
-        DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE, FALSE);
-        DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d", enemy_count[i]);
-    }
-    DrawFormatString(510, 200, GetColor(0, 0, 0), "走行距離");
-    DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d", mileage / 10);
-    DrawFormatString(510, 240, GetColor(0, 0, 0), "スピード");
-    DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",player->GetSpeed());
+    //プレイヤーの描画
+    player->Draw();
+    
+   
 
-    //バリア枚数の描画
-    for (int i = 0; i < player->GetBarrierCount(); i++)
-    {
-        DrawRotaGraph(520 + i * 25, 340, 0.2f, 0, barrier_image, TRUE, FALSE);
-    }
-
-    //燃料ゲージの描画
-    float fx = 510.0f;
-    float fy = 390.0f;
-    DrawFormatString(fx, fy, GetColor(0, 0, 0), "FUEL METER");
-    DrawBoxAA(fx, fy + 20.0f, fx + (player->GetFuel() * 100 / 20000), fy + 40.0f,
-        GetColor(0, 102, 204), TRUE);
-    DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
-
-    //体力ゲージの描画
-    fx = 510.0f;
-    fy = 430.0f;
-    DrawFormatString(fx, fy, GetColor(0, 0, 0), "PLAYER HP");
-    DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 100 / 1000), fy + 40.0f,
-        GetColor(255, 0, 0), TRUE);
-    DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
-        FALSE);
-
-
+    ////デバッグ用
+    //DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
+    ////仮ハイスコア用
+    //DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
+    ////仮スピード用
+    // DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
+    // //仮走行距離用
+    // DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
+    // ui->Draw();
 }
 
 
@@ -239,6 +209,8 @@ void GameMainScene::Finalize()
     //動的確保したオブジェクトを削除する
     player->Finalize();
     delete player;
+    ui->Finalize();
+    delete ui;
 
     for (int i = 0; i < 10; i++)
     {
@@ -251,6 +223,8 @@ void GameMainScene::Finalize()
     }
 
     delete[] enemy;
+
+    DeleteSoundMem(BGM);
 }
 
 //現在のシーン情報を取得

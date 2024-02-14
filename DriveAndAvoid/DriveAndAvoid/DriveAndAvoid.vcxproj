@@ -80,7 +80,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\dxlib</AdditionalLibraryDirectories>
     </Link>
@@ -97,7 +97,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
+    <ClCompile Include="Object\UI.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
     <ClCompile Include="Scene\HelpScene.cpp" />
     <ClCompile Include="Scene\RankingDispScene.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object\UI.h" />
     <ClInclude Include="Scene\HelpScene.h" />
     <ClInclude Include="Scene\RankingDispScene.h" />
     <ClInclude Include="Scene\RankingInputScene.h" />
