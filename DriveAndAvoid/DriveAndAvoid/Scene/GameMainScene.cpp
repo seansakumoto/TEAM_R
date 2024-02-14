@@ -125,7 +125,7 @@ eSceneType GameMainScene::Update()
     {
         if (enemy[i] != nullptr)
         {
-            enemy[i]->Update(player->GetSpeed());
+            enemy[i]->Updata(player->GetSpeed());
 
                 // 画面外に行ったら、敵を削除してスコア加算
                 if (enemy[i]->GetLocation().y >= 640.0f)
