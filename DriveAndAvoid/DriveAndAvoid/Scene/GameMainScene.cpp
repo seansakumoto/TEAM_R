@@ -36,7 +36,7 @@ void GameMainScene::Initialize()
 	// LoadGraph‚Å“G‚Ì‰æ‘œ‚ğ“Ç‚İ‚Ş
 	image = LoadGraph("Resource/images/barikedo1.png");
 	//ƒ|[ƒY‰æ‘œ
-	pause_image = LoadGraph("Resource/images/pause.png");
+	pause_image = LoadGraph("Resource/images/pause1.png");
 
 	BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
