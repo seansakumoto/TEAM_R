@@ -181,7 +181,8 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    if (pause == 0) {
+    if (pause == 0) 
+    {
         DrawGraph(0, 0, pause_image, TRUE);
     }
    

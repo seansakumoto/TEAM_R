@@ -22,21 +22,21 @@ Player::~Player()
 void Player::Initialize()
 {
 	is_active = true;
-	location = Vector2D(250.0f, 480.0f/5.0f*4);
-	box_size = Vector2D(31.0f, 60.0f);
+	location = Vector2D(250.0f, 480.0f / 5.0f * 4);
+	box_size = Vector2D(31.0f, 30.0f);
 	angle = 0.0f;
 	speed = 7.0f;//プレイヤーの速度デフォルト5
 	barrier_count = 3;
 	life = 3;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/player.bmp");
+	image = LoadGraph("Resource/images/player.png");
 
 
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resource/images/car1pol.bmpがありません\n");
+		throw("Resource/images/player.pngがありません\n");
 	}
 }
 
@@ -207,8 +207,8 @@ bool Player::IsBarrier()const
 void Player::Movement()
 {
 	Vector2D move = Vector2D(0.0f);
-	float MoveSizeX = 100;
-	float MoveSizeY = 480 / 5;
+	float MoveSizeX = 50;
+	float MoveSizeY = 40;
 	angle = 0.0f;
 	//
 	//
