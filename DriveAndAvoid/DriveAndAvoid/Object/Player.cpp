@@ -45,13 +45,13 @@ void Player::Update()
 	//‘€ì•s‰Âó‘Ô‚Å‚ ‚ê‚ÎA©g‚ğ‰ñ“]‚³‚¹‚é
 	if (!is_active)
 	{
-		/*angle += DX_PI_F / 24.0f;
+		angle += DX_PI_F / 24.0f;
 		speed = 1.0f;
 		if (angle >= DX_PI_F * 4.0f)
 		{
 			is_active = true;
 		}
-		return;*/
+		return;
 		if (barrier == nullptr)
 		{
 			barrier = new Barrier;

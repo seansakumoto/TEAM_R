@@ -1,6 +1,5 @@
 #pragma once
-
-
+#include "../Utility/Vector2D.h"
 
 class Enemy
 {
@@ -15,7 +14,8 @@ private:
 
     int image;
 
-
+    Vector2D location;
+    Vector2D box_size;
 public:
     Enemy();
     ~Enemy();
@@ -28,6 +28,8 @@ public:
     void Draw()const;
     void Finalize();
 
-    int GetX() const; // X座標を取得するメソッド
     int GetY() const; // Y座標を取得するメソッド
+
+    Vector2D GetLocation() const;
+    Vector2D GetBoxSize() const;
 };

@@ -4,10 +4,11 @@
 #include"../Scene/GameMainScene.h"
 #include <string>
 
-Enemy::Enemy()
+Enemy::Enemy() : location(0.0f), box_size(0.0f) 
 {
 
 }
+
 
 Enemy::~Enemy()
 {
@@ -18,7 +19,6 @@ void Enemy::Initialize()
 {
     // 障害物の画像を読み込む
     image = LoadGraph("Resource/images/bariked.png");
-
     // 初期位置をランダムに設定する
     int xPositions[] = { 15, 115, 215, 315, 415 };
     x = xPositions[GetRand(5)];
@@ -31,6 +31,10 @@ void Enemy::Initialize()
     // 障害物のサイズを設定する
     width = 75; // 障害物の幅
     height = 75; // 障害物の高さ
+
+    // 位置や当たり判定の大きさを設定する
+    location = Vector2D(x, y);
+    box_size = Vector2D(width, height);
 }
 
 void Enemy::Update()
@@ -52,11 +56,6 @@ void Enemy::Draw() const
     // 障害物の画像を描画する
     DrawGraph(x, y, image, TRUE);
 
-    // 画像の現在の位置を表示する
-    int drawX = x;
-    int drawY = y - 20; // 画像の上に表示するために y 座標を調整する
-    std::string positionInfo ="X:"+ std::to_string(x) +",Y:" + std::to_string(y);
-    DrawString(drawX, drawY, positionInfo.c_str(), GetColor(255, 255, 255));
 }
 
 void Enemy::Finalize()
@@ -69,13 +68,17 @@ int Enemy::GetY() const {
     return y;
 }
 
-int Enemy::GetX() const {
-    return x; // x 座標を返す
 
-
-}
 // 引数を受け取るコンストラクターの実装
 Enemy::Enemy(int initialX, int initialY) : x(initialX), y(initialY)
 {
     // 引数で受け取った値を使った初期化処理
+}
+
+Vector2D Enemy::GetLocation() const {
+    return location;
+}
+
+Vector2D Enemy::GetBoxSize() const {
+    return box_size;
 }

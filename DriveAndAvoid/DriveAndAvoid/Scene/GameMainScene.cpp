@@ -117,17 +117,14 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    // 敵の描画
-    for (const auto& e : enemy) {
-        e->Draw();
-    }
-
     //プレイヤーの描画
     player->Draw();
     ui->Draw();
 
-    // 敵の数を表示
-    DrawFormatString(10, 10, GetColor(255, 255, 255), "Enemies: %d", enemy.size());
+    // 敵の描画
+    for (const auto& e : enemy) {
+        e->Draw();
+    }
 }
 
 
@@ -218,18 +215,10 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 
     // 敵情報がなければ、当たり判定を無視する
     if (e == nullptr)
-    {
+    {   
         return false;
     }
 
-    // プレイヤーと敵の当たり判定を行う
- // ここでは簡易的な当たり判定として、プレイヤーの座標と障害物の座標が一致した場合に当たりとする
-    if (static_cast<int>(p->GetLocation().x) == e->GetX() && static_cast<int>(p->GetLocation().y) == e->GetY())
-    {
-        // 障害物に当たった場合の処理を行う
-        DrawString(0, 0, "障害物に当たりました！", GetColor(255, 255, 255)); // 画面に文字を描画
-        return true;
-    }
 
     return false;
 }
