@@ -21,14 +21,18 @@ enemy(nullptr)
     }
 }
 
+
 GameMainScene::~GameMainScene()
 {
+ 
 
 }
 
 //初期化処理
 void GameMainScene::Initialize()
 {
+
+   
     timer = 0;
 
     //高得点値を読み込む
@@ -67,16 +71,14 @@ void GameMainScene::Initialize()
 
     //オブジェクトの生成
     player = new Player;
-    enemy = new Enemy * [10];
     ui = new UI;
 
-    //オブジェクトの初期化
+    // オブジェクトの初期化
     player->Initialize();
     ui->Initialize();
 
-    for (int i = 0; i < 10; i++)
-    {
-        enemy[i] = nullptr;
+    for (auto& e : enemy) {
+        e->Initialize();
     }
 
 }
@@ -213,18 +215,23 @@ void GameMainScene::Finalize()
     delete player;
     ui->Finalize();
     delete ui;
-
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Finalize();
-            delete enemy[i];
-            enemy[i] = nullptr;
-        }
+    //delete ui;
+    for (auto& e : enemy) {
+        e->Finalize();
+        delete e;
     }
 
-    delete[] enemy;
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    if (enemy[i] != nullptr)
+    //    {
+    //        enemy[i]->Finalize();
+    //        delete enemy[i];
+    //        enemy[i] = nullptr;
+    //    }
+    //}
+
+    //delete[] enemy;
 }
 
 //現在のシーン情報を取得
@@ -249,23 +256,22 @@ void GameMainScene::ReadHighScore()
 //当たり判定処理（プレイヤーと敵）
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-    //プレイヤーがバリアを張っていたら、当たり判定を無視する
+    // プレイヤーがバリアを張っていたら、当たり判定を無視する
     if (p->IsBarrier())
     {
         return false;
     }
 
-    //敵情報がなければ、当たり判定を無視する
+    // 敵情報がなければ、当たり判定を無視する
     if (e == nullptr)
-    {
+    {   
         return false;
     }
 
-    //位置情報の差分を取得
-    Vector2D diff_location = p->GetLocation() - e->GetLocation();
 
-    //当たり判定サイズの大きさを取得
-    Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+    return false;
+}
+
 
     //コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
     return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));

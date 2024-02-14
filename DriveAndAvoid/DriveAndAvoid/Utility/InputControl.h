@@ -27,7 +27,13 @@ public:
 	static Vector2D GetLeftStick();   //左スティック
 	static Vector2D GetRightStick();  //右スティック
 
+	 // 新しいメソッドを追加：2つ目のコントローラーのボタン入力取得処理
+	static bool GetButton2(int button);
+
 private:
 	//ボタン配列範囲チェック
 	static bool CheckButtonRange(int button);
+
+
+
 };
