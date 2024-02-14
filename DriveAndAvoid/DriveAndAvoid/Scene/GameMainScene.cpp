@@ -1,9 +1,10 @@
 #include "GameMainScene.h"
 #include "../Object/RankingData.h"
+#include "../Utility/InputControl.h"
 #include "DxLib.h"
 #include <math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), pause_flag(),
 barrier_image(NULL),
                                           mileage(0), player(nullptr),
 enemy(nullptr)
@@ -59,65 +60,82 @@ void GameMainScene::Initialize()
     {
         enemy[i] = nullptr;
     }
+    //
+    pause_flag = TRUE;
+
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-    //プレイヤーの更新
-    player->Update();
+    
 
-    //移動距離の更新
-    mileage += (int)player->GetSpeed() + 5;
-
-    //敵生成処理
-    if (mileage / 20 % 100 == 0)
+    if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
     {
+        pause_flag = !pause_flag;
+    }
+
+    if (pause_flag == TRUE)
+    {
+       
+
+        //プレイヤーの更新
+        player->Update();
+
+        //移動距離の更新
+        mileage += (int)player->GetSpeed() + 5;
+
+        //敵生成処理
+        if (mileage / 20 % 100 == 0)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (enemy[i] == nullptr)
+                {
+                    int type = GetRand(3) % 3;
+                    enemy[i] = new Enemy(type, enemy_image[type]);
+                    enemy[i]->Initialize();
+                    break;
+                }
+            }
+        }
+
+        //敵の更新と当たり判定チェック
         for (int i = 0; i < 10; i++)
         {
-            if (enemy[i] == nullptr)
+            if (enemy[i] != nullptr)
             {
-                int type = GetRand(3) % 3;
-                enemy[i] = new Enemy(type, enemy_image[type]);
-                enemy[i]->Initialize();
-                break;
+                enemy[i]->Update(player->GetSpeed());
+
+                //画面外に行ったら、敵を削除してスコア加算
+                if (enemy[i]->GetLocation().y >= 640.0f)
+                {
+                    enemy_count[enemy[i]->GetType()]++;
+                    enemy[i]->Finalize();
+                    delete enemy[i];
+                    enemy[i] = nullptr;
+                }
+
+
+                //当たり判定の確認
+                if (IsHitCheck(player, enemy[i]))
+                {
+                    player->SetActive(false);
+                    player->DecreaseHp(-50.0f);
+                    enemy[i]->Finalize();
+                    delete enemy[i];
+                    enemy[i] = nullptr;
+                }
             }
         }
-    }
-
-    //敵の更新と当たり判定チェック
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
+        //プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
+        if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
         {
-            enemy[i]->Updata(player->GetSpeed());
-
-            //画面外に行ったら、敵を削除してスコア加算
-            if (enemy[i]->GetLocation().y >= 640.0f)
-            {
-                enemy_count[enemy[i]->GetType()]++;
-                enemy[i]->Finalize();
-                delete enemy[i];
-                enemy[i] = nullptr;
-            }
-
-            //当たり判定の確認
-            if (IsHitCheck(player, enemy[i]))
-            {
-                player->SetActive(false);
-                player->DecreaseHp(-50.0f);
-                enemy[i]->Finalize();
-                delete enemy[i];
-                enemy[i] = nullptr;
-            }
+            return eSceneType::E_RESULT;
         }
+       
     }
-
-    //プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-    if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
-    {
-        return eSceneType::E_RESULT;
-    }
+    
     return GetNowScene();
 }
 
@@ -128,17 +146,19 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    //敵の描画
-    for (int i = 0; i < 10; i++)
-    {
-        if (enemy[i] != nullptr)
+    if (pause_flag == TRUE) {
+        //敵の描画
+        for (int i = 0; i < 10; i++)
         {
-            enemy[i]->Draw();
+            if (enemy[i] != nullptr)
+            {
+                enemy[i]->Draw();
+            }
         }
-    }
 
-    //プレイヤーの描画
-    player->Draw();
+        //プレイヤーの描画
+        player->Draw();
+    }
 
     //UIの描画
     DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
@@ -178,6 +198,8 @@ void GameMainScene::Draw()const
         GetColor(255, 0, 0), TRUE);
     DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
         FALSE);
+
+
 }
 
 

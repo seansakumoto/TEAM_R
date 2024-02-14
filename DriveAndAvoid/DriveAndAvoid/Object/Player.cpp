@@ -27,7 +27,7 @@ void Player::Initialize()
 	angle = 0.0f;
 	speed = 3.0f;
 	hp = 1000;
-	fuel = 6000;
+	fuel = 20000;
 	barrier_count = 3;
 
 	//‰æ‘œ‚Ì“Ç‚Ýž‚Ý
@@ -68,11 +68,11 @@ void Player::Update()
 
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
-		is_active = false;
+		
 	}
 
 	//ƒoƒŠƒAˆ—
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_Y) && barrier_count > 0)
 	{
 		if (barrier == nullptr)
 		{
