@@ -261,16 +261,16 @@ void Player::Movement()
 		move += Vector2D(-MoveSizeX, 0.0f);
 		angle = -DX_PI_F / 18;
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
+	else if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		move += Vector2D(MoveSizeX, 0.0f);
 		angle = DX_PI_F / 18;
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
+	else if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
 	{
 		move += Vector2D(0.0f, -MoveSizeY);
 	}
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
+	else if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
 		move += Vector2D(0.0f, MoveSizeY);
 	}
