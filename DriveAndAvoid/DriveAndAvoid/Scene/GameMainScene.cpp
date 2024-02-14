@@ -23,8 +23,6 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
-    timer = 0;
-
     //高得点値を読み込む
     ReadHighScore();
 
@@ -35,6 +33,8 @@ void GameMainScene::Initialize()
     // 
     // LoadGraphで敵の画像を読み込む
     image = LoadGraph("Resource/images/barikedo1.png");
+
+    BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
     //エラーチェック
     if (back_ground == -1)
@@ -76,6 +76,10 @@ void GameMainScene::Initialize()
 //更新処理
 eSceneType GameMainScene::Update()
 {
+    if (CheckSoundMem(BGM) == false) {
+
+        PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
+    }
     //プレイヤーの更新
     player->Update();
     ui->Update();
@@ -102,7 +106,7 @@ eSceneType GameMainScene::Update()
     {
         if (enemy[i] != nullptr)
         {
-            enemy[i]->Updata(player->GetSpeed());
+            enemy[i]->Update(player->GetSpeed());
 
             // 画面外に行ったら、敵を削除してスコア加算
             if (enemy[i]->GetLocation().y >= 640.0f)
@@ -162,7 +166,6 @@ void GameMainScene::Draw()const
 
 
     //デバッグ用
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f", timer);
     //仮ハイスコア用
     DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
     //仮スピード用
