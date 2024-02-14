@@ -30,7 +30,7 @@ void Player::Initialize()
 	life = 3;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/car1pol.bmp");
+	image = LoadGraph("Resource/images/player.bmp");
 
 
 	//エラーチェック
@@ -131,6 +131,7 @@ void Player::Draw()
 	//{
 	//	barrier->Draw(this->location);
 	//}
+
 }
 
 
