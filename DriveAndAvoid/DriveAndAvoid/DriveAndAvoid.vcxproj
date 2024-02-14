@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
     <ClCompile Include="Object\UI.cpp" />
+    <ClCompile Include="Scene\MiniGameScene.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
     <ClCompile Include="Scene\HelpScene.cpp" />
     <ClCompile Include="Scene\RankingDispScene.cpp" />
@@ -157,6 +158,7 @@
   <ItemGroup>
     <ClInclude Include="Object\UI.h" />
     <ClInclude Include="Scene\HelpScene.h" />
+    <ClInclude Include="Scene\MiniGameScene.h" />
     <ClInclude Include="Scene\RankingDispScene.h" />
     <ClInclude Include="Scene\RankingInputScene.h" />
     <ClInclude Include="Scene\ResultScene.h" />

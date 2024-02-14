@@ -4,16 +4,17 @@
 #include "DxLib.h"
 #include <math.h>
 
+
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),pause_flag(TRUE),pause_image(NULL),
 mileage(0), player(nullptr),
 enemy(nullptr)
 {
 
-    for (int i = 0; i < 1; i++)
-    {
-        image = NULL;
-    }
+	for (int i = 0; i < 1; i++)
+	{
+		image = NULL;
+	}
 }
 
 GameMainScene::~GameMainScene()
@@ -39,26 +40,26 @@ void GameMainScene::Initialize()
 
     BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
-    //エラーチェック
-    if (back_ground == -1)
-    {
-        throw("Resource/images/back.bmpがありません\n");
-    }
+	//エラーチェック
+	if (back_ground == -1)
+	{
+		throw("Resource/images/back.bmpがありません\n");
+	}
 
-    if (image == -1)
-    {
-          throw("Resource/images/barikedo1.pngがありません\n");
-    }
+	if (image == -1)
+	{
+		throw("Resource/images/barikedo1.pngがありません\n");
+	}
 
-    if (barrier_image == -1)
-    {
-        throw("Resource/images/barrier.pngがありません\n");
-    }
+	if (barrier_image == -1)
+	{
+		throw("Resource/images/barrier.pngがありません\n");
+	}
 
-    if (image == -1)
-    {
-        throw("Resource/images/barikedo.pngがありません\n");
-    }
+	if (image == -1)
+	{
+		throw("Resource/images/barikedo.pngがありません\n");
+	}
 
     if (pause_image == -1)
     {
@@ -70,9 +71,10 @@ void GameMainScene::Initialize()
     enemy = new Enemy * [4];
     ui = new UI;
 
-    //オブジェクトの初期化
-    player->Initialize();
-    ui->Initialize();
+
+	//オブジェクトの初期化
+	player->Initialize();
+	ui->Initialize();
 
     for (int i = 0; i < 4; i++)
     {
@@ -123,7 +125,7 @@ eSceneType GameMainScene::Update()
     {
         if (enemy[i] != nullptr)
         {
-            enemy[i]->Update(player->GetSpeed());
+            enemy[i]->Updata(player->GetSpeed());
 
                 // 画面外に行ったら、敵を削除してスコア加算
                 if (enemy[i]->GetLocation().y >= 640.0f)
@@ -134,18 +136,28 @@ eSceneType GameMainScene::Update()
                     enemy[i] = nullptr;
                 }
 
-                // 当たり判定の確認
-                if (IsHitCheck(player, enemy[i]))
-                {
-                    player->SetActive(false);
-                    player->DecLife();
-                    // player->DecreaseHp(-50.0f);
-                    enemy[i]->Finalize();
-                    delete enemy[i];
-                    enemy[i] = nullptr;
-                }
-            }
-        }
+			// 当たり判定の確認
+			if (IsHitCheck(player, enemy[i]))
+			{
+				player->SetActive(false);
+				//player->DecLife();//当たったら体力を減らす
+				enemy[i]->Finalize();
+				delete enemy[i];
+				enemy[i] = nullptr;
+
+				
+				//当たったら移動
+				return eSceneType::E_MINIGAME;
+				
+
+				//// 残機が0になったらリザルト画面に遷移する
+				//if (player->GetLife() < 3)
+				//{
+				//	return eSceneType::E_MINIGAME;
+				//}
+			}
+		}
+	}
 
         //残機が0になるとリザルト画面に遷移する
         if (player->GetLife() < 0)
@@ -177,9 +189,9 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw()const
 {
-    //背景画像の描画
-    DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
-    DrawGraph(0, mileage % 480, back_ground, TRUE);
+	//背景画像の描画
+	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
+	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
     if (pause == 0) 
     {
@@ -196,19 +208,20 @@ void GameMainScene::Draw()const
         }
     }
 
-    //プレイヤーの描画
-    player->Draw();
+	//プレイヤーの描画
+	player->Draw();
 
 
 
-    //デバッグ用
-    //仮ハイスコア用
-    DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
-    //仮スピード用
-    DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f", player->GetSpeed());
-    //仮走行距離用
-    DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
-    ui->Draw();
+	//デバッグ用
+	DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f", timer);
+	//仮ハイスコア用
+	DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
+	//仮スピード用
+	DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f", player->GetSpeed());
+	//仮走行距離用
+	DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
+	ui->Draw();
 }
 
 
@@ -216,95 +229,96 @@ void GameMainScene::Draw()const
 //終了時処理
 void GameMainScene::Finalize()
 {
-    //スコアを計算する
-    int score = (mileage / 10 * 10);
-    for (int i = 0; i < 3; i++)
-    {
-        score += (i + 1) * 50 * enemy_count[i];
-    }
+	//スコアを計算する
+	int score = (mileage / 10 * 10);
+	for (int i = 0; i < 3; i++)
+	{
+		score += (i + 1) * 50 * enemy_count[i];
+	}
 
-    //リザルトデータの書き込み
-    FILE* fp = nullptr;
-    //ファイルオープン
-    errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
+	//リザルトデータの書き込み
+	FILE* fp = nullptr;
+	//ファイルオープン
+	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
 
-    //エラーチェック
-    if (result != 0)
-    {
-        throw("Resource/dat/result_data.csvが開けません\n");
-    }
+	//エラーチェック
+	if (result != 0)
+	{
+		throw("Resource/dat/result_data.csvが開けません\n");
+	}
 
-    //スコアを保存
-    fprintf(fp, "%d,\n", score);
+	//スコアを保存
+	fprintf(fp, "%d,\n", score);
 
-    //避けた数と得点を保存
-    for (int i = 0; i < 3; i++)
-    {
-        fprintf(fp, "%d,\n", enemy_count[i]);
-    }
+	//避けた数と得点を保存
+	for (int i = 0; i < 3; i++)
+	{
+		fprintf(fp, "%d,\n", enemy_count[i]);
+	}
 
-    //ファイルクローズ
-    fclose(fp);
+	//ファイルクローズ
+	fclose(fp);
 
-    //動的確保したオブジェクトを削除する
-    player->Finalize();
-    delete player;
-    ui->Finalize();
-    delete ui;
+	//動的確保したオブジェクトを削除する
+	player->Finalize();
+	delete player;
+	ui->Finalize();
+	delete ui;
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Finalize();
-            delete enemy[i];
-            enemy[i] = nullptr;
-        }
-    }
+	for (int i = 0; i < 4; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Finalize();
+			delete enemy[i];
+			enemy[i] = nullptr;
+		}
+	}
 
-    delete[] enemy;
+	delete[] enemy;
 }
 
 //現在のシーン情報を取得
 eSceneType GameMainScene::GetNowScene()const
 {
-    return eSceneType::E_MAIN;
+	return eSceneType::E_MAIN;
 }
 
 
 //ハイスコア読み込み
 void GameMainScene::ReadHighScore()
 {
-    RankingData data;
-    data.Initialize();
+	RankingData data;
+	data.Initialize();
 
-    high_score = data.GetScore(0);
+	high_score = data.GetScore(0);
 
-    data.Finalize();
+	data.Finalize();
 }
 
 
 //当たり判定処理（プレイヤーと敵）
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-    //プレイヤーがバリアを張っていたら、当たり判定を無視する
-    if (p->IsBarrier())
-    {
-        return false;
-    }
+	//プレイヤーがバリアを張っていたら、当たり判定を無視する
+	if (p->IsBarrier())
+	{
+		return false;
+	}
 
-    //敵情報がなければ、当たり判定を無視する
-    if (e == nullptr)
-    {
-        return false;
-    }
+	//敵情報がなければ、当たり判定を無視する
+	if (e == nullptr)
+	{
+		return false;
+	}
 
-    //位置情報の差分を取得
-    Vector2D diff_location = p->GetLocation() - e->GetLocation();
+	//位置情報の差分を取得
+	Vector2D diff_location = p->GetLocation() - e->GetLocation();
 
-    //当たり判定サイズの大きさを取得
-    Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+	//当たり判定サイズの大きさを取得
+	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
 
-    //コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-    return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
+
