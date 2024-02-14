@@ -201,11 +201,11 @@ void GameMainScene::Draw()const
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-	// ポーズフラグが立っている場合のみポーズ画像を描画する
-	if (pause_flag)
-	{
-		DrawGraph(0, 0, pause_image, TRUE);
-	}
+    if (pause == 0) 
+    {
+        DrawGraph(0, 0, pause_image, TRUE);
+    }
+   
 
     // 敵の描画
     for (int i = 0; i < 4; i++)
