@@ -69,7 +69,7 @@ void Player::Update()
 
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
-		is_active = false;
+		
 	}
 
 	//ƒoƒŠƒAˆ—
