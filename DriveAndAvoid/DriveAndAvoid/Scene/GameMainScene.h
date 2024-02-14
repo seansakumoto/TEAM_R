@@ -4,6 +4,7 @@
 #include "../Object/Player.h"
 #include "../Object/Enemy.h"
 #include "../Object/UI.h"
+#include"MiniGameScene.h"
 
 
 class GameMainScene : public SceneBase
@@ -21,6 +22,9 @@ private:
     Enemy** enemy;          // “G
     UI* ui;
 
+
+
+    
 public:
     GameMainScene();
     virtual ~GameMainScene();
