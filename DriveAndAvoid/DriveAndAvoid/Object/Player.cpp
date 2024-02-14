@@ -190,16 +190,16 @@ void Player::Movement()
 	float MoveSizeY = 480 / 5;
 	angle = 0.0f;
 
-	//// スティックの入力を取得する
-	//Vector2D stickInput = InputControl::GetLeftStick();
+	// スティックの入力を取得する
+	Vector2D stickInput = InputControl::GetLeftStick();
 
-	//// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
-	//float moveSpeed = 6.0f; // 移動速度を設定する
+	// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
+	float moveSpeed = 6.0f; // 移動速度を設定する
 
-	//float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
-	//float moveYAmount = stickInput.y * moveSpeed; // Y
+	float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
+	float moveYAmount = stickInput.y * moveSpeed; // Y
 
-	//move += Vector2D(moveXAmount, moveYAmount); // スティックの移動量
+	move += Vector2D(moveXAmount, moveYAmount); // スティックの移動量
 
 	// スティックの入力を処理した後に、十字キーの入力を処理する
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
