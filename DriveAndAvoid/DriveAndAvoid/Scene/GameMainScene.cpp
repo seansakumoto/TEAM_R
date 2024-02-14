@@ -36,7 +36,7 @@ void GameMainScene::Initialize()
     // LoadGraphで敵の画像を読み込む
     image = LoadGraph("Resource/images/barikedo1.png");
     //ポーズ画像
-    pause_image = LoadGraph("Resource/images/pause.png");
+    pause_image = LoadGraph("Resource/images/pouse1.png");
 
     BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
@@ -81,7 +81,7 @@ void GameMainScene::Initialize()
         enemy[i] = nullptr;
     }
     //
-    pause_flag = TRUE;
+    pause_flag = FALSE;
 }
 
 //更新処理
@@ -91,14 +91,9 @@ eSceneType GameMainScene::Update()
 
         PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
     }
-    //プレイヤーの更新
-    player->Update();
-    ui->Update();
-   
-    if (pause_flag == TRUE)
-    {
-       
 
+    if (!pause_flag == TRUE)
+    {
         //プレイヤーの更新
         player->Update();
         ui->Update();
@@ -172,17 +167,30 @@ eSceneType GameMainScene::Update()
         }
 
     }
-    //ポーズ画面
-    if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-    {
-      
-        pause_flag = !pause_flag;
-        if (pause == 0) {
-            pause == 1;
-        }
-       
+    ////ポーズ画面
+    //if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
+    //{
+    //  
+    //    pause_flag = !pause_flag;
+    //    if (pause == 0) {
+    //        pause == 1;
+    //    }
+    //   
 
-    }
+    //}
+
+	//ポーズボタンが押されたらポーズフラグを切り替える
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
+	{
+		pause_flag = !pause_flag;
+	}
+
+	//ポーズフラグが立っている場合は更新処理を行わない
+	if (pause_flag)
+	{
+		return GetNowScene();
+	}
+
     return GetNowScene();
 }
 
@@ -193,10 +201,11 @@ void GameMainScene::Draw()const
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    if (pause == 0) {
-        DrawGraph(0, 0, pause_image, TRUE);
-    }
-   
+	// ポーズフラグが立っている場合のみポーズ画像を描画する
+	if (pause_flag)
+	{
+		DrawGraph(0, 0, pause_image, TRUE);
+	}
 
     // 敵の描画
     for (int i = 0; i < 4; i++)

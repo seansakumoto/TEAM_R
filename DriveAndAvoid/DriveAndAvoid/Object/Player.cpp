@@ -99,28 +99,28 @@ void Player::Update()
 //描画処理
 void Player::Draw()
 {
-	//プレイヤー画像の描画
-	if (barrier != nullptr)
-	{
-		if (invincible<reviv/2)
-		{
-			DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
-		}
-		else
-		{
-			
-		}
-		if (invincible > reviv)
-		{
-			invincible = 0;
-			reviv -= 4;
-		}
-	}
-	else
-	{
-		DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
-	}
-	/*DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);*/
+	////プレイヤー画像の描画
+	//if (barrier != nullptr)
+	//{
+	//	if (invincible<reviv/2)
+	//	{
+	//		DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+	//	}
+	//	else
+	//	{
+	//		
+	//	}
+	//	if (invincible > reviv)
+	//	{
+	//		invincible = 0;
+	//		reviv -= 4;
+	//	}
+	//}
+	//else
+	//{
+	//	DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+	//}
+	//DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);
 	
 
 	DrawFormatString(550, 350, GetColor(0, 255, 0), "%d", life);

@@ -27,6 +27,9 @@ private:
     UI* ui;
 
 
+    // BGM‚ªÄ¶’†‚©‚Ç‚¤‚©‚ğ¦‚·ƒtƒ‰ƒO
+    bool isBGMPlaying = false;
+
 
     
 public:
