@@ -3,20 +3,14 @@
 #include "DxLib.h"
 #include <math.h>
 
-#include "GameMainScene.h"
-#include "../Object/RankingData.h"
-#include "DxLib.h"
-#include <math.h>
-
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),
 mileage(0), player(nullptr),
 enemy(nullptr)
 {
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 1; i++)
     {
-        image = NULL;
         image = NULL;
     }
 }
@@ -48,10 +42,10 @@ void GameMainScene::Initialize()
         throw("Resource/images/back.bmpがありません\n");
     }
 
-    /*  if (result == -1)
-      {
-          throw("Resource/images/car.bmpがありません\n");
-      }*/
+    if (image == -1)
+    {
+          throw("Resource/images/barikedo1.pngがありません\n");
+    }
 
     if (barrier_image == -1)
     {
@@ -65,14 +59,14 @@ void GameMainScene::Initialize()
 
     //オブジェクトの生成
     player = new Player;
-    enemy = new Enemy * [10];
+    enemy = new Enemy * [4];
     ui = new UI;
 
     //オブジェクトの初期化
     player->Initialize();
     ui->Initialize();
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 4; i++)
     {
         enemy[i] = nullptr;
     }
@@ -91,7 +85,7 @@ eSceneType GameMainScene::Update()
     // 敵生成処理
     if (mileage / 20 % 100 == 0)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (enemy[i] == nullptr)
             {
@@ -104,7 +98,7 @@ eSceneType GameMainScene::Update()
     }
 
     // 敵の更新と当たり判定チェック
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (enemy[i] != nullptr)
         {
@@ -123,12 +117,19 @@ eSceneType GameMainScene::Update()
             if (IsHitCheck(player, enemy[i]))
             {
                 player->SetActive(false);
+                player->DecLife();
                 // player->DecreaseHp(-50.0f);
                 enemy[i]->Finalize();
                 delete enemy[i];
                 enemy[i] = nullptr;
             }
         }
+    }
+
+    //残機が0になるとリザルト画面に遷移する
+    if (player->GetLife() < 0)
+    {
+        return eSceneType::E_RESULT;
     }
 
     //制限時間を超えたらリザルトに遷移する
@@ -147,7 +148,7 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
     // 敵の描画
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (enemy[i] != nullptr)
         {
@@ -212,7 +213,7 @@ void GameMainScene::Finalize()
     ui->Finalize();
     delete ui;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (enemy[i] != nullptr)
         {
