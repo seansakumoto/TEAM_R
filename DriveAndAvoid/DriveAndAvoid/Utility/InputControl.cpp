@@ -113,3 +113,10 @@ bool InputControl::CheckButtonRange(int button)
 {
 	return(0 <= button && button < 16);
 }
+
+// 新しいメソッドの実装
+bool InputControl::GetButton2(int button)
+{
+	// 2つ目のコントローラーのボタン入力を取得するための処理を記述
+	return CheckButtonRange(button) && now_button[button];
+}

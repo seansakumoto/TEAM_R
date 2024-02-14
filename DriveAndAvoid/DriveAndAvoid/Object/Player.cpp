@@ -47,13 +47,13 @@ void Player::Update()
 	//操作不可状態であれば、自身を回転させる
 	if (!is_active)
 	{
-		/*angle += DX_PI_F / 24.0f;
+		angle += DX_PI_F / 24.0f;
 		speed = 1.0f;
 		if (angle >= DX_PI_F * 4.0f)
 		{
 			is_active = true;
 		}
-		return;*/
+		return;
 		if (barrier == nullptr)
 		{
 			barrier = new Barrier;
@@ -206,13 +206,18 @@ bool Player::IsBarrier()const
 void Player::Movement()
 {
 	Vector2D move = Vector2D(0.0f);
+
 	float MoveSizeX = 100;
+
+	float MoveSizeX = 640 / 4;
+
 	float MoveSizeY = 480 / 5;
 	angle = 0.0f;
 	//
 	//
 	//Vector2D move = Vector2D(0.0f);
 	//angle = 0.0f;
+
 
 	////十字移動処理
 	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
@@ -243,6 +248,18 @@ void Player::Movement()
 	//{
 	//	location -= move;
 	//}
+
+	//// スティックの入力を取得する
+	//Vector2D stickInput = InputControl::GetLeftStick();
+
+	//// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
+	//float moveSpeed = 6.0f; // 移動速度を設定する
+
+	//float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
+	//float moveYAmount = stickInput.y * moveSpeed; // Y
+
+	//move += Vector2D(moveXAmount, moveYAmount); // スティックの移動量
+
 
  //   //スティックの入力を取得する
 	//Vector2D stickInput = InputControl::GetLeftStick();

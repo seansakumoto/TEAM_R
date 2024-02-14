@@ -4,6 +4,7 @@
 #include "../Object/Player.h"
 #include "../Object/Enemy.h"
 #include "../Object/UI.h"
+#include <vector> // 必要なヘッダーを追加
 
 
 class GameMainScene : public SceneBase
