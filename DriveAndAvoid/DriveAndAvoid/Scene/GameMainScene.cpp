@@ -111,6 +111,7 @@ eSceneType GameMainScene::Update()
             if (IsHitCheck(player, enemy[i]))
             {
                 player->SetActive(false);
+                player->DecLife();
                 //player->DecreaseHp(-50.0f);
                 enemy[i]->Finalize();
                 delete enemy[i];
@@ -119,6 +120,11 @@ eSceneType GameMainScene::Update()
         }
     }
 
+    //残機が0になるとリザルト画面に遷移する
+    if (player->GetLife() < 0)
+    {
+        return eSceneType::E_RESULT;
+    }
 
     //制限時間を超えたらリザルトに遷移する
     if (ui->GetTimeFlg()==true)
@@ -149,15 +155,15 @@ void GameMainScene::Draw()const
     
    
 
-    //デバッグ用
-    DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
-    //仮ハイスコア用
-    DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
-    //仮スピード用
-     DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
-     //仮走行距離用
-     DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
-     ui->Draw();
+    ////デバッグ用
+    //DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f",timer);
+    ////仮ハイスコア用
+    //DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
+    ////仮スピード用
+    // DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f",player->GetSpeed());
+    // //仮走行距離用
+    // DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
+    // ui->Draw();
 }
 
 

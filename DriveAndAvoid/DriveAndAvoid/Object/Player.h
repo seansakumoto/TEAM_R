@@ -12,10 +12,12 @@ private:
 	Vector2D box_size;  //当たり判定の大きさ
 	float angle;        //角度
 	float speed;        //速さ
-	int muteki;
+	int invincible;     //無敵状態
+	int reviv;          //復活の演出間隔
 	//float hp;           //体力
 	//float fuel;         //燃料
 	int barrier_count;  //バリアの枚数
+	int life;           //プレイヤー残機
 	Barrier* barrier;   //バリア
 
 
@@ -32,9 +34,11 @@ public:
 public:
 	void SetActive(bool flg);        //有効フラグ設定
 	//void DecreaseHp(float value);    //体力減少処理
+	void DecLife();         //残機減少処理
 	Vector2D GetLocation()const;     //位置座標取得
 	Vector2D GetBoxSize()const;      //当たり判定の大きさ取得
 	float GetSpeed()const;           //速さ取得処理
+	int GetLife()const;
 	//float GetFuel()const;            //燃料取得
 	//float GetHp()const;              //体力取得
 	int GetBarrierCount()const;     //バリアの枚数取得
