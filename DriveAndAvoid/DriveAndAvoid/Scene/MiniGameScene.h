@@ -2,22 +2,26 @@
 
 #include "SceneBase.h"
 
-class MiniGameScene :public SceneBase
+class MiniGameScene : public SceneBase
 {
 private:
-	int background_image; //”wŒi‰æ‘œ
-	int background_image1;//”wŒi‰æ‘œ2
+    int background_image; // ”wŒi‰æ‘œ
+    int background_image1; // ”wŒi‰æ‘œ2
+    int currentImage;
 
-	int currentImage;
 
 public:
-	MiniGameScene();
-	virtual ~MiniGameScene();
+    MiniGameScene();
+    virtual ~MiniGameScene();
 
-	virtual void Initialize() override;
-	virtual eSceneType Update() override;
-	virtual void Draw() const override;
-	virtual void Finalize() override;
+    virtual void Initialize() override;
+    virtual eSceneType Update() override;
+    virtual void Draw() const override;
+    virtual void Finalize() override;
 
-	virtual eSceneType GetNowScene() const override;
+    virtual eSceneType GetNowScene() const override;
+
+    void DrawColoredBox(unsigned int color) const;
+
+
 };
