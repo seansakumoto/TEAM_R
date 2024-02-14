@@ -35,6 +35,8 @@ void GameMainScene::Initialize()
     int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,
         enemy_image);
 
+    BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
+
     //エラーチェック
     if (back_ground == -1)
     {
@@ -69,6 +71,10 @@ void GameMainScene::Initialize()
 //更新処理
 eSceneType GameMainScene::Update()
 {
+    if (CheckSoundMem(BGM) == false) {
+
+        PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
+    }
     //プレイヤーの更新
     player->Update();
     ui->Update();
@@ -217,6 +223,8 @@ void GameMainScene::Finalize()
     }
 
     delete[] enemy;
+
+    DeleteSoundMem(BGM);
 }
 
 //現在のシーン情報を取得

@@ -108,7 +108,6 @@ void SceneManager::Finalize()
 		delete current_scene;
 		current_scene = nullptr;
 	}
-
 	//DXライブラリの使用を終了する
 	DxLib_End();
 }
