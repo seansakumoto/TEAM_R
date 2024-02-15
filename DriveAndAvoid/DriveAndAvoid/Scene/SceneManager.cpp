@@ -2,7 +2,7 @@
 #include "../Utility/InputControl.h"
 #include "DxLib.h"
 #include "TitleScene.h"
-#include "CreditScene.h"
+#include "CreditScene.h"//クレジット
 #include "GameMainScene.h"
 #include "ResultScene.h"
 #include "HelpScene.h"
@@ -10,6 +10,8 @@
 #include "RankingInputScene.h"
 
 #include"MiniGameScene.h"
+
+
 
 SceneManager::SceneManager() :current_scene(nullptr)
 {
@@ -183,6 +185,10 @@ SceneBase* SceneManager::CreateScene(eSceneType scene_type)
 
 		case eSceneType::E_MINIGAME:
 			return new MiniGameScene;
+
+		case eSceneType::E_CREDIT:
+			return new CreditScene;
+
 
 		default:
 			return nullptr;

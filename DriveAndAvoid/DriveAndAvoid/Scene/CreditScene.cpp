@@ -17,6 +17,7 @@ CreditScene::~CreditScene()
 void CreditScene::Initialize()
 {
 	back_image = LoadGraph("Resource/images/Credit_back_image.png");
+
 	if (back_image == -1)
 	{
 		throw("Credit_back_image.png‚ª‚ ‚è‚Ü‚¹‚ñ");
