@@ -75,7 +75,7 @@ eSceneType TitleScene::Update()
 		switch (menu_cursor)
 		{
 			case 0:
-				return eSceneType::E_CREDIT;
+				return eSceneType::E_MAIN;
 				
 			case 1:
 				return eSceneType::E_RANKING_DISP;
@@ -87,7 +87,7 @@ eSceneType TitleScene::Update()
 				return eSceneType::E_END;
 
 			case 4:
-				return eSceneType::E_MAIN;
+				return eSceneType::E_CREDIT;
 		}
 	}
 
