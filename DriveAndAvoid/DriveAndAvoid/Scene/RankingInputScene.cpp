@@ -80,7 +80,12 @@ void RankingInputScene::Draw()const
     DrawGraph(0, 0, backgrouond_image, TRUE);
 
     //名前入力指示文字列の描画
-    DrawString(150, 100, "ランキングに登録します", 0xffffff);
+    
+    
+    
+    
+    
+    (150, 100, "ランキングに登録します", 0xffffff);
     DrawFormatString(100, 220, GetColor(255, 255, 255), ">%s", name);
 
     //選択用文字を描画
@@ -95,7 +100,6 @@ void RankingInputScene::Draw()const
     }
     DrawString(40, 405, "決定",GetColor(255, 255, 255));
     DrawString(40 + font_size * 2, 405, "消す", GetColor(255, 255, 255));
-
     //選択文字をフォーカスする
     if (cursor_y < 4)
     {

@@ -66,9 +66,16 @@ void ResultScene::Draw()const
 	DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
 	
 	SetFontSize(30);
-	DrawString(220, 170, "ゲームオーバー", GetColor(204, 0, 0));
+	
+	
+	(220, 170, "ゲームオーバー", GetColor(204, 0, 0));
 	SetFontSize(20);
-	DrawString(220, 240, "スコア", GetColor(0, 0, 0));
+	
+	
+	
+	
+	
+	(220, 240, "スコア", GetColor(0, 0, 0));
 	DrawFormatString(220, 240, 0xFFFFFF, "         =%6d", score);
 }
 

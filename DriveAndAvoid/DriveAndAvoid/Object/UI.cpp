@@ -5,6 +5,7 @@
 
 UI::UI() 
 {
+	
 }
 
 
@@ -22,12 +23,8 @@ void UI::Initialize()
 	timeFlg = false;
 
 	//画像の読み込み
-	LoadDivGraph("Resource/images/Number_r.bmp", 10, 10, 1, 20, 30, Num); // 画像の分割読み込み
-	////エラーチェック
-	//if (.../)
-	//{
-	//	throw(".../");
-	//}
+	LoadDivGraph("Resource/images/number_r1.png", 10, 10, 1, 30, 60, Num); // 画像の分割読み込み
+
 }
 
 
@@ -50,19 +47,13 @@ void UI::Update()
 //描画処理
 void UI::Draw()
 {
-	DrawFormatString(520, 10, GetColor(0, 255, 0), "TIME");
-	DrawGraph(520, 30, Num[(cnt % 10000) / 1000], TRUE);
-	DrawGraph(540, 30, Num[(cnt % 1000) / 100], TRUE);
-
-	
-
+	SetFontSize(50);
+	DrawFormatString(510, 10, GetColor(0, 255, 0), "TIME");
+	DrawGraph(530, 60, Num[(cnt % 10000) / 1000], TRUE);
+	DrawGraph(560, 60, Num[(cnt % 1000) / 100], TRUE);
 	/*DrawFormatString(520, 10, GetColor(0, 255, 0), "スコア");
 	DrawGraph(520, 30,  , TRUE);*/
-
-
-
 	//DrawFormatString(550, 350, GetColor(0, 255, 0), "%d", life);
-
 
 }
 

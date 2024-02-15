@@ -8,7 +8,7 @@ angle(0.0f),
 						speed(0.0f), barrier_count(0),life(0),
 barrier(nullptr)
 {
-
+	
 }
 
 
@@ -21,6 +21,8 @@ Player::~Player()
 //初期化処理
 void Player::Initialize()
 {
+
+
 	is_active = true;
 	location = Vector2D(250.0f, 480.0f / 5.0f * 4);
 	box_size = Vector2D(31.0f, 30.0f);
@@ -94,13 +96,13 @@ void Player::Update()
 	//操作不可状態
 	if (!is_active)
 	{
-		/*angle += DX_PI_F / 24.0f;
-		speed = 1.0f;
+		angle += DX_PI_F / 24.0f;
+		//speed = 1.0f;
 		if (angle >= DX_PI_F * 4.0f)
 		{
 			is_active = true;
 		}
-		return;*/
+		return;
 
 		//敵にぶつかったときの処理
 		if (barrier == nullptr)
@@ -117,25 +119,20 @@ void Player::Update()
 	//移動処理
 	Movement();
 
-
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-	{
-
-	}
-
 	if (CheckSoundMem(sound_effect[0]) == 0)
 	{
 		PlaySoundMem(sound_effect[0], DX_PLAYTYPE_BACK, TRUE);
 	}
 
 	//バリア処理
-	/*if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
 	{
 		if (barrier == nullptr)
 		{
+			barrier_count--;
 			barrier = new Barrier;
 		}
-	}*/
+	}
 
 	//バリアが生成されていたら、更新を行う
 	if (barrier != nullptr)
@@ -156,18 +153,20 @@ void Player::Update()
 
 //描画処理
 void Player::Draw()
-{
-	//プレイヤー画像の描画
+{ // プレイヤー画像の描画
 	if (barrier != nullptr)
 	{
-		if (invincible<reviv/2)
+		if (invincible < reviv / 2)
 		{
+			// プレイヤーを描画する
 			DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
 			invincible++;
 		}
 		else
 		{
-			
+			// プレイヤーが無敵でない場合は、通常通り描画する必要があります
+			// ここでプレイヤーを描画する必要があります
+			DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
 		}
 		if (invincible > reviv)
 		{
@@ -177,20 +176,25 @@ void Player::Draw()
 	}
 	else
 	{
+		// プレイヤーを通常通り描画します
 		DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
 	}
-	/*DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);*/
-	
-	DrawGraph(500, 150, image, TRUE);
-	SetFontSize(20);
-	DrawFormatString(590, 230, GetColor(0, 255, 0), "×%d", life);
-	
 
-	////バリアが生成されていたら、描画を行う
-	//if (barrier != nullptr)
-	//{
-	//	barrier->Draw(this->location);
-	//}
+	//UI画像色
+	DrawBox(500, 0, 640, 480, GetColor(255, 255, 255), TRUE);
+
+	//残機UI
+	 DrawGraph(530, 150, image, TRUE);
+	 SetFontSize(25);
+	DrawFormatString(595, 230, GetColor(0, 255, 0), "×%d", life);
+
+
+
+	// バリアが生成されていたら、描画を行う
+	if (barrier != nullptr)
+	{
+		barrier->Draw(this->location);
+	}
 
 }
 
@@ -271,51 +275,6 @@ void Player::Movement()
 	float MoveSizeX = 50;
 	float MoveSizeY = 80;
 	angle = 0.0f;
-	//
-	//
-	//Vector2D move = Vector2D(0.0f);
-	//angle = 0.0f;
-
-	////十字移動処理
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
-	//{
-	//	move += Vector2D(-100.0f, 0.0f);
-	//	angle = -DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
-	//{
-	//	move += Vector2D(100.0f, 0.0f);
-	//	angle = DX_PI_F / 18;
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
-	//{
-	//	move += Vector2D(0.0f, -150.0f);
-	//}
-	//if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
-	//{
-	//	move += Vector2D(0.0f, 150.0f);
-	//}
-
-	//location += move;
-
-
-	////画面外に行かないように制限する
-	//if ((location.x < 150.0f) || (location.x >= 640.0f - 180.0f) ||
-	//	(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
-	//{
-	//	location -= move;
-	//}
-
- //   //スティックの入力を取得する
-	//Vector2D stickInput = InputControl::GetLeftStick();
-
-	//// スティックのX軸方向の入力に応じてプレイヤーキャラクターを移動させる
-	//float moveSpeed = 6.0f; // 移動速度を設定する
-
-	//float moveXAmount = stickInput.x * moveSpeed; // スティックの入力に応じて移動する量を計算 X
-	//float moveYAmount = stickInput.y * moveSpeed; // Y
-
-	//Vector2D move = Vector2D(moveXAmount, moveYAmount); // スティックの移動量
 
 	//十字移動処理
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_LEFT))
@@ -343,12 +302,11 @@ void Player::Movement()
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x <= 0.0f+box_size.x) || (location.x >= 500.0f) ||
-		(location.y <=0.0f) || (location.y >= 480.0f))
+	if ((location.x < box_size.x) || (location.x >= 640.f - 160.0f) ||
+		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
 	}
-
 }
 
 

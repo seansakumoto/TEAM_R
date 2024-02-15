@@ -217,23 +217,30 @@ void GameMainScene::Draw()const
 		DrawGraph(0, 0, pause_image, TRUE);
 	}
 	ui->Draw();
+	//バリアの文字とバリア
+	SetFontSize(23);
+	DrawString(530, 300, "バリア", GetColor(255,0,0),TRUE);
+	//バリア枚数の描画
+	for (int i = 0; i < player->GetBarrierCount(); i++)
+	{
+		DrawRotaGraph(540 + i * 25, 350, 0.2f, 0, barrier_image, TRUE, FALSE);
+	}
 
-	
 	//スタートのカウント
 	SetFontSize(50);
 	if (startcnt >= 180) {
-		DrawFormatString(225, 240, GetColor(0, 255, 0), "3");
+		DrawFormatString(240, 220, GetColor(0, 255, 0), "3");
 	}
 	if (startcnt >= 120 && startcnt < 180) {
-		DrawFormatString(225, 240, GetColor(0, 255, 0), "2");
+		DrawFormatString(240, 220, GetColor(0, 255, 0), "2");
 	}
 	if (startcnt >= 60 && startcnt < 120) {
-		DrawFormatString(225, 240, GetColor(0, 255, 0), "1");
+		DrawFormatString(240, 220, GetColor(0, 255, 0), "1");
 	}
 	if (startcnt >= 0 && startcnt < 60) {
-		DrawFormatString(155, 240, GetColor(0, 255, 0), "スタート");
+		DrawFormatString(155, 220, GetColor(0, 255, 0), "スタート");
 	}
-	
+
 }
 
 
