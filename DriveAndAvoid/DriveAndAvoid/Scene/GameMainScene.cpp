@@ -159,24 +159,25 @@ eSceneType GameMainScene::Update()
 						enemy[i] = nullptr;
 					}
 
-					// 当たり判定の確認
-					if (IsHitCheck(player, enemy[i]))
-					{
-						player->SetActive(false);
-						enemy[i]->Finalize();
-						delete enemy[i];
-						enemy[i] = nullptr;
-						// 当たったら移動
-						return eSceneType::E_MINIGAME;
-					}
+				// 当たり判定の確認
+				if (IsHitCheck(player, enemy[i]))
+				{
+					player->SetActive(false);
+					enemy[i]->Finalize();
+					delete enemy[i];
+					enemy[i] = nullptr;
+					player->DecLife();
+					// 当たったら移動
+					//return eSceneType::E_MINIGAME;
 				}
 			}
+		}
 
-			// 残機が0になるとリザルト画面に遷移する
-			if (player->GetLife() < 0)
-			{
-				return eSceneType::E_RESULT;
-			}
+		// 残機が0になるとリザルト画面に遷移する
+		if (player->GetLife() < 0)
+		{
+			return eSceneType::E_MINIGAME;
+		}
 
 			// 制限時間を超えたらリザルトに遷移する
 			if (ui->GetTimeFlg() == true)

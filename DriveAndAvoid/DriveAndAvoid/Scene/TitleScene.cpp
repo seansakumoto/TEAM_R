@@ -103,7 +103,7 @@ void TitleScene::Draw()const
 	DrawGraph(0, 0, background_image, FALSE);
 
 	//クレジット画像の描画
-	DrawGraph(120, 360, credit_image, TRUE);
+	DrawGraph(50, 355, credit_image, TRUE);
 
 	//メニュー画像の描画
 	DrawGraph(120, 200, menu_image, TRUE);
