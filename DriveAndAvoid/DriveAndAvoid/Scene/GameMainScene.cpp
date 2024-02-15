@@ -25,6 +25,7 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
+	score = 0;
 	//高得点値を読み込む
 	ReadHighScore();
 
@@ -147,6 +148,8 @@ eSceneType GameMainScene::Update()
 				if (enemy[i]->GetLocation().y >= 640.0f)
 				{
 					enemy_count[enemy[i]->GetType()]++;
+					//スコアを計算する
+					score += 100;
 					enemy[i]->Finalize();
 					delete enemy[i];
 					enemy[i] = nullptr;
@@ -216,7 +219,7 @@ void GameMainScene::Draw()const
 	//デバッグ用
 	DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f", timer);
 	//仮ハイスコア用
-	DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", high_score);
+	DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", score);
 	//仮スピード用
 	DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f", player->GetSpeed());
 	//仮走行距離用
@@ -229,12 +232,7 @@ void GameMainScene::Draw()const
 //終了時処理
 void GameMainScene::Finalize()
 {
-	//スコアを計算する
-	int score = (mileage / 10 * 10);
-	for (int i = 0; i < 3; i++)
-	{
-		score += (i + 1) * 50 * enemy_count[i];
-	}
+	
 
 	//リザルトデータの書き込み
 	FILE* fp = nullptr;
@@ -251,10 +249,10 @@ void GameMainScene::Finalize()
 	fprintf(fp, "%d,\n", score);
 
 	//避けた数と得点を保存
-	for (int i = 0; i < 3; i++)
+	/*for (int i = 0; i < 3; i++)
 	{
 		fprintf(fp, "%d,\n", enemy_count[i]);
-	}
+	}*/
 
 	//ファイルクローズ
 	fclose(fp);
@@ -282,6 +280,11 @@ void GameMainScene::Finalize()
 eSceneType GameMainScene::GetNowScene()const
 {
 	return eSceneType::E_MAIN;
+}
+
+int GameMainScene::GetScore()
+{
+	return score;
 }
 
 
