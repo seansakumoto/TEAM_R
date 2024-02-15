@@ -202,6 +202,7 @@ void Player::Finalize()
 	{
 		delete barrier;
 	}
+
 }
 
 

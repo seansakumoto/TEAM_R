@@ -6,7 +6,7 @@
 
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),pause_flag(TRUE),pause_image(NULL),
+barrier_image(NULL), pause_flag(TRUE), pause_image(NULL),
 mileage(0), player(nullptr),
 enemy(nullptr)
 {
@@ -25,8 +25,8 @@ GameMainScene::~GameMainScene()
 //初期化処理
 void GameMainScene::Initialize()
 {
-    //高得点値を読み込む
-    ReadHighScore();
+	//高得点値を読み込む
+	ReadHighScore();
 
     //画像の読み込み
     back_ground = LoadGraph("Resource/images/back.bmp");
@@ -36,9 +36,9 @@ void GameMainScene::Initialize()
     // LoadGraphで敵の画像を読み込む
     image = LoadGraph("Resource/images/barikedo1.png");
     //ポーズ画像
-    pause_image = LoadGraph("Resource/images/pause.png");
+    pause_image = LoadGraph("Resource/images/pause1.png");
 
-    BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
+	BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -61,15 +61,15 @@ void GameMainScene::Initialize()
 		throw("Resource/images/barikedo.pngがありません\n");
 	}
 
-    if (pause_image == -1)
-    {
-        throw("Resource/images/pause.pngがありません\n");
-    }
+	if (pause_image == -1)
+	{
+		throw("Resource/images/pause.pngがありません\n");
+	}
 
-    //オブジェクトの生成
-    player = new Player;
-    enemy = new Enemy * [4];
-    ui = new UI;
+	//オブジェクトの生成
+	player = new Player;
+	enemy = new Enemy * [4];
+	ui = new UI;
 
 
 	//オブジェクトの初期化
@@ -81,108 +81,105 @@ void GameMainScene::Initialize()
         enemy[i] = nullptr;
     }
     //
-    pause_flag = TRUE;
+    pause_flag = FALSE;
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-    if (CheckSoundMem(BGM) == false) {
+	//// BGMが再生されておらず、再生フラグが立っている場合は再生する
+	//if (!isBGMPlaying && CheckSoundMem(BGM) == false) {
+	//	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
+	//	isBGMPlaying = true; // BGMが再生されている状態に更新する
+	//}
 
-        PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
-    }
-    //プレイヤーの更新
-    player->Update();
-    ui->Update();
-   
-    if (pause_flag == TRUE)
-    {
-       
+	// ポーズボタンが押されたらポーズフラグを切り替える
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
+	{
+		pause_flag = !pause_flag;
 
-        //プレイヤーの更新
-        player->Update();
-        ui->Update();
-
-        //移動距離の更新
-        mileage += (int)player->GetSpeed() + 5;
-        // 敵生成処理
-        if (mileage / 20 % 100 == 0)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (enemy[i] == nullptr)
-                {
-                    int type = GetRand(3) % 3;
-                    enemy[i] = new Enemy(type, image);
-                    enemy[i]->Initialize();
-                    break;
-                }
-            }
-        }
-
-    // 敵の更新と当たり判定チェック
-    for (int i = 0; i < 4; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Updata(player->GetSpeed());
-
-                // 画面外に行ったら、敵を削除してスコア加算
-                if (enemy[i]->GetLocation().y >= 640.0f)
-                {
-                    enemy_count[enemy[i]->GetType()]++;
-                    enemy[i]->Finalize();
-                    delete enemy[i];
-                    enemy[i] = nullptr;
-                }
-
-			// 当たり判定の確認
-			if (IsHitCheck(player, enemy[i]))
-			{
-				player->SetActive(false);
-				//player->DecLife();//当たったら体力を減らす
-				enemy[i]->Finalize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-
-				
-				//当たったら移動
-				return eSceneType::E_MINIGAME;
-				
-
-				//// 残機が0になったらリザルト画面に遷移する
-				//if (player->GetLife() < 3)
-				//{
-				//	return eSceneType::E_MINIGAME;
-				//}
-			}
-		}
 	}
 
-        //残機が0になるとリザルト画面に遷移する
-        if (player->GetLife() < 0)
-        {
-            return eSceneType::E_RESULT;
-        }
+	// ポーズフラグが立っている場合は更新処理を行わない
+	if (pause_flag)
+	{
+		StopSoundMem(BGM);
+		return GetNowScene();
+	}
+	else
+	{
+		// ポーズフラグが立っていない場合の処理を記述する
 
-        //制限時間を超えたらリザルトに遷移する
-        if (ui->GetTimeFlg() == true)
-        {
-            return eSceneType::E_RESULT;
-        }
+		if (CheckSoundMem(BGM) == false) {
+
+			PlaySoundMem(BGM, DX_PLAYTYPE_BACK,false);
+		}
+		// プレイヤーの更新
+		player->Update();
+		ui->Update();
+
+		// 移動距離の更新
+		mileage += (int)player->GetSpeed() + 5;
+
+		// 敵生成処理
+		if (mileage / 20 % 100 == 0)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (enemy[i] == nullptr)
+				{
+					int type = GetRand(3) % 3;
+					enemy[i] = new Enemy(type, image);
+					enemy[i]->Initialize();
+					break;
+				}
+			}
+		}
+
+		// 敵の更新と当たり判定チェック
+		for (int i = 0; i < 4; i++)
+		{
+			if (enemy[i] != nullptr)
+			{
+				enemy[i]->Updata(player->GetSpeed());
+
+				// 画面外に行ったら、敵を削除してスコア加算
+				if (enemy[i]->GetLocation().y >= 640.0f)
+				{
+					enemy_count[enemy[i]->GetType()]++;
+					enemy[i]->Finalize();
+					delete enemy[i];
+					enemy[i] = nullptr;
+				}
+
+				// 当たり判定の確認
+				if (IsHitCheck(player, enemy[i]))
+				{
+					player->SetActive(false);
+					enemy[i]->Finalize();
+					delete enemy[i];
+					enemy[i] = nullptr;
+					// 当たったら移動
+					return eSceneType::E_MINIGAME;
+				}
+			}
+		}
+
+		// 残機が0になるとリザルト画面に遷移する
+		if (player->GetLife() < 0)
+		{
+			return eSceneType::E_RESULT;
+		}
+
+		// 制限時間を超えたらリザルトに遷移する
+		if (ui->GetTimeFlg() == true)
+		{
+			return eSceneType::E_RESULT;
+		}
 
     }
-    //ポーズ画面
-    if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-    {
-      
-        pause_flag = !pause_flag;
-        if (pause == 0) {
-            pause == 1;
-        }
-       
+   
 
-    }
     return GetNowScene();
 }
 
@@ -193,23 +190,25 @@ void GameMainScene::Draw()const
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-    if (pause == 0) 
-    {
-        DrawGraph(0, 0, pause_image, TRUE);
-    }
-   
+	
 
-    // 敵の描画
-    for (int i = 0; i < 4; i++)
-    {
-        if (enemy[i] != nullptr)
-        {
-            enemy[i]->Draw();
-        }
-    }
+	// 敵の描画
+	for (int i = 0; i < 4; i++)
+	{
+		if (enemy[i] != nullptr)
+		{
+			enemy[i]->Draw();
+		}
+	}
 
 	//プレイヤーの描画
 	player->Draw();
+
+	// ポーズフラグが立っている場合のみポーズ画像を描画する
+	if (pause_flag)
+	{
+		DrawGraph(0, 0, pause_image, TRUE);
+	}
 
 
 
@@ -274,7 +273,7 @@ void GameMainScene::Finalize()
 			enemy[i] = nullptr;
 		}
 	}
-
+	DeleteSoundMem(BGM);
 	delete[] enemy;
 }
 
@@ -321,4 +320,3 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
 	return ((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
-

@@ -31,6 +31,7 @@ public:
 	void Update();       //更新処理
 	void Draw();         //描画処理
 	void Finalize();     //終了時処理
+	
 
 public:
 	void SetActive(bool flg);        //有効フラグ設定
