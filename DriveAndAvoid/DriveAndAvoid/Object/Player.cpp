@@ -181,9 +181,10 @@ void Player::Draw()
 	}
 	/*DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, FALSE);*/
 	
-
-	DrawFormatString(550, 350, GetColor(0, 255, 0), "%d", life);
-	DrawFormatString(550, 370, GetColor(255, 255, 255), "%f", location.x);
+	DrawGraph(500, 150, image, TRUE);
+	SetFontSize(20);
+	DrawFormatString(590, 230, GetColor(0, 255, 0), "×%d", life);
+	
 
 	////バリアが生成されていたら、描画を行う
 	//if (barrier != nullptr)

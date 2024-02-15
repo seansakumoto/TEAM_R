@@ -12,6 +12,7 @@ private:
 	int menu_image;
 	int cursor_image;
 	int menu_cursor;
+	int BGM;
 
 public:
 	TitleScene();

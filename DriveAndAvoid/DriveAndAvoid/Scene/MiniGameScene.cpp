@@ -13,6 +13,7 @@
 
 		// BGMを読み込む
 		BGM = LoadSoundMem("Resource/sounds/goe.mp3");
+		BGM2 = LoadSoundMem("Resource/sounds/ok.mp3");
 
 		// BGMをループ再生する
 		PlaySoundMem(BGM, DX_PLAYTYPE_LOOP);
@@ -41,7 +42,7 @@
 		}
 
 		// 画像の表示位置を初期化
-		int numImages = rand() % 21 + 10; // 10から30までのランダムな数を生成
+		int numImages = rand() % 31 + 20; // 10から30までのランダムな数を生成
 		imagePositions.resize(numImages); // std::vectorのサイズを設定
 		currentImageIndex.resize(numImages); // 画像のインデックスを設定
 		for (int i = 0; i < numImages; ++i)
@@ -84,21 +85,6 @@
 	// 更新処理
 	eSceneType MiniGameScene::Update()
 	{
-	
-
-		// 残り時間を計算
-		auto currentTime = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsedSeconds = currentTime - startTime;
-		double remainingTime = 10.0 - elapsedSeconds.count();
-
-		if (remainingTime <= 0) {
-			// 残り時間が0以下になったらゲームメインに移動し、画像を全て非表示にする
-			for (int i = 0; i < currentImageIndex.size(); ++i) {
-				currentImageIndex[i] = -1; // 画像を非表示にする
-			}
-			return eSceneType::E_END;
-		}
-
 
 		// ボタンの状態を取得
 		bool buttonB = InputControl::GetButtonDown(XINPUT_BUTTON_B);
@@ -158,7 +144,28 @@
 		// 画面を更新
 		ScreenFlip();
 
+		// 固定された位置にランダムな画像を表示
+		bool allImagesHidden = true; // すべての画像が非表示かどうかを示すフラグ
+		for (int i = 0; i < numImages; ++i)
+		{
+			if (currentImageIndex[i] != -1)
+			{
+				DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
+				allImagesHidden = false; // 一つでも表示されている画像があればフラグをfalseにする
+			}
+			else
+			{
+				DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
+			}
+		}
 
+		// 画面を更新
+		ScreenFlip();
+
+		// すべての画像が非表示になった場合はE_ENDを返す
+		if (allImagesHidden) {
+			return eSceneType::E_END;
+		}
 
 		// 10秒経過していない場合はまだこのシーンを続ける
 		return GetNowScene();
@@ -201,6 +208,8 @@
 			if (currentImageIndex[i] == buttonIndex)
 			{
 				// ボタンに対応する画像が見つかった場合は、その画像のインデックスを初期化することで非表示にする
+				// また、対応するSEを再生する
+				PlaySoundMem(BGM2, DX_PLAYTYPE_BACK);
 				currentImageIndex[i] = -1;
 				break; // 最初の1つだけ非表示にするため、見つかったらループを抜ける
 			}

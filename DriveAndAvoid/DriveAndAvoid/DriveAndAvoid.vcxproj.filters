@@ -117,4 +117,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\..\Users\KBC 12206095\Downloads\追い抜け駆け抜けろ!的なBGM.mp3" />
+  </ItemGroup>
 </Project>
