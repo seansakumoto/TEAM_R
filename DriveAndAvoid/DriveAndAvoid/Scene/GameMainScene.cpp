@@ -28,15 +28,15 @@ void GameMainScene::Initialize()
 	//高得点値を読み込む
 	ReadHighScore();
 
-	//画像の読み込み
-	back_ground = LoadGraph("Resource/images/back.bmp");
-	barrier_image = LoadGraph("Resource/images/barrier.png");
-	//int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,enemy_image);
-	// 
-	// LoadGraphで敵の画像を読み込む
-	image = LoadGraph("Resource/images/barikedo1.png");
-	//ポーズ画像
-	pause_image = LoadGraph("Resource/images/pause1.png");
+    //画像の読み込み
+    back_ground = LoadGraph("Resource/images/back.bmp");
+    barrier_image = LoadGraph("Resource/images/barrier.png");
+    //int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,enemy_image);
+    // 
+    // LoadGraphで敵の画像を読み込む
+    image = LoadGraph("Resource/images/barikedo1.png");
+    //ポーズ画像
+    pause_image = LoadGraph("Resource/images/pouse1.png");
 
 	BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
@@ -76,12 +76,12 @@ void GameMainScene::Initialize()
 	player->Initialize();
 	ui->Initialize();
 
-	for (int i = 0; i < 4; i++)
-	{
-		enemy[i] = nullptr;
-	}
-	//
-	pause_flag = FALSE;
+    for (int i = 0; i < 4; i++)
+    {
+        enemy[i] = nullptr;
+    }
+    //
+    pause_flag = FALSE;
 }
 
 //更新処理
@@ -172,10 +172,33 @@ eSceneType GameMainScene::Update()
 			return eSceneType::E_RESULT;
 		}
 
+    }
+    ////ポーズ画面
+    //if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
+    //{
+    //  
+    //    pause_flag = !pause_flag;
+    //    if (pause == 0) {
+    //        pause == 1;
+    //    }
+    //   
+
+    //}
+
+	//ポーズボタンが押されたらポーズフラグを切り替える
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
+	{
+		pause_flag = !pause_flag;
+	}
+
+	//ポーズフラグが立っている場合は更新処理を行わない
+	if (pause_flag)
+	{
 		return GetNowScene();
 	}
-}
 
+    return GetNowScene();
+}
 
 //描画処理
 void GameMainScene::Draw()const

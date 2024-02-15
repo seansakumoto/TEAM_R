@@ -3,10 +3,13 @@
 #include "DxLib.h"
 #include <chrono>
 #include <thread>
+#include <cstdlib> // 追加
 
 MiniGameScene::MiniGameScene()
 {
-
+    SetFontSize(50);
+    // 乱数のシード値を設定する
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 MiniGameScene::~MiniGameScene()
@@ -14,63 +17,89 @@ MiniGameScene::~MiniGameScene()
 
 }
 
-// 初期化処理
 void MiniGameScene::Initialize()
 {
+    int image = LoadDivGraph("Resource/images/color.png", 4, 4, 1, 50, 50, color);
 
+    // 読み込みエラーチェック
+    if (image == -1)
+    {
+        throw("画像の読み込みに失敗しました");
+    }
+
+    // 画像の表示位置を初期化
+    for (int i = 0; i < 10; ++i)
+    {
+        // 画面内に収まるように画像の位置を調整
+        while (true)
+        {
+            // 画像の位置をランダムに決定
+            imagePositions[i].x = rand() % (600 - 50); // x座標をランダムに生成（画像の幅を考慮）
+            imagePositions[i].y = rand() % (400 - 50); // y座標をランダムに生成（画像の高さを考慮）
+
+            // 重なりをチェック
+            bool overlap = false;
+            for (int j = 0; j < i; ++j)
+            {
+                if (abs(imagePositions[i].x - imagePositions[j].x) < 50 && abs(imagePositions[i].y - imagePositions[j].y) < 50)
+                {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            // 重なりがなければループを抜ける
+            if (!overlap)
+            {
+                break;
+            }
+        }
+    }
+
+    // ビルドシーンが切り替わるたびにランダムな画像のインデックスを決定
+    currentImageIndex = std::vector<int>(10); // 要素数10のvectorを初期化
+    for (int i = 0; i < 10; ++i)
+    {
+        currentImageIndex[i] = rand() % 4; // 0から3までのランダムな数を生成
+    }
 }
+
+
 
 // 更新処理
 eSceneType MiniGameScene::Update()
 {
-	// ボタンが押されたら色を変更する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
-	{
-		DrawColoredBox(GetColor(255, 0, 0)); // 赤色の四角形を描画
-		return eSceneType::E_MAIN; // ゲームメインシーンに移動
-	}
-	else if (InputControl::GetButtonDown(XINPUT_BUTTON_Y))
-	{
-		DrawColoredBox(GetColor(255, 255, 0)); // 黄色の四角形を描画
-		return eSceneType::E_MAIN; // ゲームメインシーンに移動
-	}
-	else if (InputControl::GetButtonDown(XINPUT_BUTTON_X))
-	{
-		DrawColoredBox(GetColor(0, 0, 255)); // 青色の四角形を描画
-		return eSceneType::E_MAIN; // ゲームメインシーンに移動
-	}
-	else if (InputControl::GetButtonDown(XINPUT_BUTTON_A))
-	{
-		DrawColoredBox(GetColor(0, 255, 0)); // 緑色の四角形を描画
-		return eSceneType::E_MAIN; // ゲームメインシーンに移動
-	}
+    // 画像の位置をランダムに移動させる
+    for (int i = 0; i < 10; ++i)
+    {
+        // 画像の位置を少しランダムに変更
+        imagePositions[i].x += (rand() % 11) - 5; // -5から5までのランダムな数を加える
+        imagePositions[i].y += (rand() % 11) - 5; // -5から5までのランダムな数を加える
 
-	return GetNowScene();
+        // 画像が画面外に出ないようにする
+        if (imagePositions[i].x < 0) imagePositions[i].x = 0;
+        if (imagePositions[i].x > (600 - 50)) imagePositions[i].x = 600 - 50;
+        if (imagePositions[i].y < 0) imagePositions[i].y = 0;
+        if (imagePositions[i].y > (400 - 50)) imagePositions[i].y = 400 - 50;
+    }
+
+    return GetNowScene();
 }
 
 // 描画処理
 void MiniGameScene::Draw() const
 {
-	static std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-	std::chrono::duration<double> elapsedTime = std::chrono::system_clock::now() - startTime;
 
-	if (elapsedTime.count() < 10.0) // 10秒間描画を行う
-	{
-		// 色の設定
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); // ブレンドモードの設定（不透明）
+    // 画面をクリア
+    ClearDrawScreen();
 
-		// 黄色の四角形を描画
-		DrawBox(100, 100, 200, 200, GetColor(255, 255, 0), TRUE);
-
-		// 経過時間を表示
-		int remainingTime = static_cast<int>(10.0 - elapsedTime.count());
-		DrawFormatString(10, 10, GetColor(255, 255, 255), "Time: %d", remainingTime);
-	}
-	else
-	{
-		// 10秒が経過したら何も描画しない
-		ClearDrawScreen();
-	}
+    // 固定された位置にランダムな画像を表示
+    for (int i = 0; i < 10; ++i)
+    {
+        DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
+    }
+    // 画面を更新
+    ScreenFlip();
 }
 
 // 終了処理
@@ -82,12 +111,5 @@ void MiniGameScene::Finalize()
 // 現在のシーン情報を取得
 eSceneType MiniGameScene::GetNowScene() const
 {
-	return eSceneType::E_MINIGAME;
+    return eSceneType::E_MINIGAME;
 }
-
-// 任意の色の四角形を描画する
-void MiniGameScene::DrawColoredBox(unsigned int color) const
-{
-	DrawBox(300, 300, 400, 400, color, TRUE);
-}
-
