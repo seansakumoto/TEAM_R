@@ -172,7 +172,7 @@ eSceneType GameMainScene::Update()
 		// 残機が0になるとリザルト画面に遷移する
 		if (player->GetLife() < 0)
 		{
-			return eSceneType::E_RESULT;
+			return eSceneType::E_MINIGAME;
 		}
 
 		// 制限時間を超えたらリザルトに遷移する

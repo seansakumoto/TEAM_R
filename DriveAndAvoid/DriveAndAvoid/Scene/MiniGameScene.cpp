@@ -96,7 +96,7 @@
 			for (int i = 0; i < currentImageIndex.size(); ++i) {
 				currentImageIndex[i] = -1; // ‰æ‘œ‚ð”ñ•\Ž¦‚É‚·‚é
 			}
-			return eSceneType::E_MAIN;
+			return eSceneType::E_END;
 		}
 
 
