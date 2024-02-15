@@ -26,6 +26,7 @@ private:
     int enemy_count[3];     // 通り過ぎた敵カウント
     int BGM;
     float timer;
+    int startcnt;
     bool pause_flag;        //ポーズ
     Player* player;         // プレイヤー
     Enemy** enemy;          // 敵
