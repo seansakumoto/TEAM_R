@@ -12,6 +12,10 @@ private:
     int high_score;         // ハイスコア
     int back_ground;        // 背景画像
     int pause_image;        //ポーズ画像
+    int game_count3_image;
+    int game_count2_image;
+    int game_count1_image;
+    int game_start_image;
     int barrier_image;      // バリア映像
     int mileage;            // 走行距離
     int pause;

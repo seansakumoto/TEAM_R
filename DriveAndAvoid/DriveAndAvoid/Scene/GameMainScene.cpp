@@ -37,6 +37,11 @@ void GameMainScene::Initialize()
     //ポーズ画像
     pause_image = LoadGraph("Resource/images/pause.png");
 
+    game_count3_image = LoadGraph("Resoure/images/3.png");
+    game_count2_image = LoadGraph("Resoure/images/2.png");
+    game_count1_image = LoadGraph("Resoure/images/1.png");
+    game_start_image= LoadGraph("Resoure/images/START.png");
+
     BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
     //エラーチェック
@@ -64,6 +69,25 @@ void GameMainScene::Initialize()
     {
         throw("Resource/images/pause.pngがありません\n");
     }
+
+    if (game_count3_image == -1)
+    {
+        throw("Resoure/images/3.pngがありません\n");
+    }
+
+    if (game_count2_image == -1)
+    {
+        throw("Resoure/images/2.pngがありません\n");
+    }
+    if (game_count1_image == -1)
+    {
+        throw("Resoure/images/1.pngがありません\n");
+    }
+    if (game_start_image == -1)
+    {
+        throw("Resoure/images/START.pngがありません\n");
+    }
+   
 
     //オブジェクトの生成
     player = new Player;
@@ -165,8 +189,8 @@ eSceneType GameMainScene::Update()
     {
       
         pause_flag = !pause_flag;
-        if (pause == 0) {
-            pause == 1;
+        if (pause == 1) {
+            pause == 0;
         }
        
 
@@ -182,8 +206,10 @@ void GameMainScene::Draw()const
     DrawGraph(0, mileage % 480, back_ground, TRUE);
 
     if (pause == 0) {
-        DrawGraph(0, 0, pause_image, TRUE);
+        DrawGraph(0, 0, pause_image, true);
     }
+    
+    
    
 
     // 敵の描画
