@@ -45,8 +45,12 @@ void UI::Update()
 //ï`âÊèàóù
 void UI::Draw()
 {
-	DrawGraph(0, 25, Num[(cnt % 10000) / 1000], TRUE);
-	DrawGraph(20, 25, Num[(cnt % 1000) / 100], TRUE);
+	DrawFormatString(520, 10, GetColor(0, 255, 0), "êßå¿éûä‘");
+	DrawGraph(520, 30, Num[(cnt % 10000) / 1000], TRUE);
+	DrawGraph(540, 30, Num[(cnt % 1000) / 100], TRUE);
+
+	//DrawFormatString(550, 350, GetColor(0, 255, 0), "%d", life);
+
 
 }
 
