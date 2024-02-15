@@ -8,6 +8,7 @@ private:
 	int image;
 	int cnt;
 	bool timeFlg;
+	int score;
 public:
 	UI();
 	~UI();
