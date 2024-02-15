@@ -103,12 +103,17 @@ eSceneType GameMainScene::Update()
 	// ポーズフラグが立っている場合は更新処理を行わない
 	if (pause_flag)
 	{
+		StopSoundMem(BGM);
 		return GetNowScene();
 	}
 	else
 	{
 		// ポーズフラグが立っていない場合の処理を記述する
 
+		if (CheckSoundMem(BGM) == false) {
+
+			PlaySoundMem(BGM, DX_PLAYTYPE_BACK,false);
+		}
 		// プレイヤーの更新
 		player->Update();
 		ui->Update();
@@ -207,11 +212,7 @@ void GameMainScene::Draw()const
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
-	// ポーズフラグが立っている場合のみポーズ画像を描画する
-	if (pause_flag)
-	{
-		DrawGraph(0, 0, pause_image, TRUE);
-	}
+	
 
 	// 敵の描画
 	for (int i = 0; i < 4; i++)
@@ -224,6 +225,12 @@ void GameMainScene::Draw()const
 
 	//プレイヤーの描画
 	player->Draw();
+
+	// ポーズフラグが立っている場合のみポーズ画像を描画する
+	if (pause_flag)
+	{
+		DrawGraph(0, 0, pause_image, TRUE);
+	}
 
 
 
@@ -288,7 +295,7 @@ void GameMainScene::Finalize()
 			enemy[i] = nullptr;
 		}
 	}
-
+	DeleteSoundMem(BGM);
 	delete[] enemy;
 }
 
