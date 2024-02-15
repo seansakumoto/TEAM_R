@@ -50,7 +50,7 @@ void UI::Update()
 //•`‰æˆ—
 void UI::Draw()
 {
-	DrawFormatString(520, 10, GetColor(0, 255, 0), "§ŒÀŠÔ");
+	DrawFormatString(520, 10, GetColor(0, 255, 0), "TIME");
 	DrawGraph(520, 30, Num[(cnt % 10000) / 1000], TRUE);
 	DrawGraph(540, 30, Num[(cnt % 1000) / 100], TRUE);
 

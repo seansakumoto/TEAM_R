@@ -222,17 +222,18 @@ void GameMainScene::Draw()const
 
 	
 	//スタートのカウント
+	SetFontSize(50);
 	if (startcnt >= 180) {
-		DrawFormatString(250, 240, GetColor(0, 255, 0), "3");
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "3");
 	}
 	if (startcnt >= 120 && startcnt < 180) {
-		DrawFormatString(250, 240, GetColor(0, 255, 0), "2");
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "2");
 	}
 	if (startcnt >= 60 && startcnt < 120) {
-		DrawFormatString(250, 240, GetColor(0, 255, 0), "1");
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "1");
 	}
 	if (startcnt >= 0 && startcnt < 60) {
-		DrawFormatString(250, 240, GetColor(0, 255, 0), "スタート");
+		DrawFormatString(155, 240, GetColor(0, 255, 0), "スタート");
 	}
 	
 }

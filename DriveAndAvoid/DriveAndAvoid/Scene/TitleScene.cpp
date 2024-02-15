@@ -22,6 +22,8 @@ void TitleScene::Initialize()
 	credit_image = LoadGraph("Resource/images/Credit.png");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
 	cursor_image = LoadGraph("Resource/images/cone.bmp");
+	BGM = LoadSoundMem("Resource/sounds/追い抜け駆け抜けろ!的なBGM.mp3");
+
 
 	//エラーチェック
 	if (background_image == -1)
@@ -46,6 +48,12 @@ void TitleScene::Initialize()
 //更新処理
 eSceneType TitleScene::Update()
 {
+
+	if (CheckSoundMem(BGM) == false) {
+
+		PlaySoundMem(BGM, DX_PLAYTYPE_BACK, false);
+	}
+
 	//カーソル下移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
