@@ -18,7 +18,7 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Title.bmp");
+	background_image = LoadGraph("Resource/images/Taitor.png");
 	credit_image = LoadGraph("Resource/images/Credit.png");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
 	cursor_image = LoadGraph("Resource/images/cone.bmp");
@@ -28,7 +28,7 @@ void TitleScene::Initialize()
 	//エラーチェック
 	if (background_image == -1)
 	{
-		throw("Resource/images/Title.bmpがありません\n");
+		throw("Resource/images/Taitor.pngがありません\n");
 	}
 	if (credit_image == -1)
 	{
