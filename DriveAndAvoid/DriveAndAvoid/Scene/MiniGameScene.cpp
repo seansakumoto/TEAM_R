@@ -22,6 +22,8 @@ void MiniGameScene::Initialize()
     // 画像を読み込む
     int image = LoadDivGraph("Resource/images/color.png", 4, 4, 1, 50, 50, color);
 
+    LoadGraph("Resource/images/bakuhatu.png");
+
     // 読み込みエラーチェック
     if (image == -1)
     {
