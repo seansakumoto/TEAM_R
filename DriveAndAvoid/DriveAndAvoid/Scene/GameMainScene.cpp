@@ -36,7 +36,7 @@ void GameMainScene::Initialize()
     // LoadGraphで敵の画像を読み込む
     image = LoadGraph("Resource/images/barikedo1.png");
     //ポーズ画像
-    pause_image = LoadGraph("Resource/images/pouse1.png");
+    pause_image = LoadGraph("Resource/images/pause1.png");
 
 	BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
@@ -178,29 +178,7 @@ eSceneType GameMainScene::Update()
 		}
 
     }
-    ////ポーズ画面
-    //if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-    //{
-    //  
-    //    pause_flag = !pause_flag;
-    //    if (pause == 0) {
-    //        pause == 1;
-    //    }
-    //   
-
-    //}
-
-	//ポーズボタンが押されたらポーズフラグを切り替える
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-	{
-		pause_flag = !pause_flag;
-	}
-
-	//ポーズフラグが立っている場合は更新処理を行わない
-	if (pause_flag)
-	{
-		return GetNowScene();
-	}
+   
 
     return GetNowScene();
 }
