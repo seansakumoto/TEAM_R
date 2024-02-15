@@ -32,6 +32,11 @@ void Player::Initialize()
 	//画像の読み込み
 	image = LoadGraph("Resource/images/car1pol.bmp");
 
+	avoidSE = LoadSoundMem("Resource/sounds/avoid.ogg");
+	breakSE = LoadSoundMem("Resource/sounds/break.ogg");
+	hitSE = LoadSoundMem("Resource/sounds/hit.ogg");
+	moveSE = LoadSoundMem("Resource/sounds/move.ogg");
+
 
 	//エラーチェック
 	if (image == -1)
@@ -145,6 +150,11 @@ void Player::Finalize()
 	{
 		delete barrier;
 	}
+	DeleteSoundMem(avoidSE);
+	DeleteSoundMem(breakSE);
+	DeleteSoundMem(hitSE);
+	DeleteSoundMem(moveSE);
+
 }
 
 
@@ -153,6 +163,7 @@ void Player::SetActive(bool flg)
 {
 	this->is_active = flg;
 }
+
 
 
 void Player::DecLife()

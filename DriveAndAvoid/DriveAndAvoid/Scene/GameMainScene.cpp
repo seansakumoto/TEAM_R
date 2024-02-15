@@ -225,7 +225,7 @@ void GameMainScene::Finalize()
             enemy[i] = nullptr;
         }
     }
-
+    DeleteSoundMem(BGM);
     delete[] enemy;
 }
 
