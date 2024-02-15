@@ -35,7 +35,7 @@ void Enemy::Initialize()//105*40 X Y B A
 }
 
 
-void Enemy::Update(float speed)
+void Enemy::Updata(float speed)
 {
 	//ˆÊ’uî•ñ‚ÉˆÚ“®—Ê‚ğ‰ÁZ‚·‚é
 	

@@ -14,6 +14,7 @@ private:
 	float speed;        //速さ
 	int invincible;     //無敵状態
 	int reviv;          //復活の演出間隔
+	int sound_effect[4];//効果音
 	//float hp;           //体力
 	//float fuel;         //燃料
 	int barrier_count;  //バリアの枚数
@@ -30,6 +31,7 @@ public:
 	void Update();       //更新処理
 	void Draw();         //描画処理
 	void Finalize();     //終了時処理
+	
 
 public:
 	void SetActive(bool flg);        //有効フラグ設定

@@ -1,5 +1,6 @@
 #include "UI.h"
 #include "DxLib.h"
+#include "../Scene/GameMainScene.h"
 
 
 UI::UI() 
@@ -33,6 +34,7 @@ void UI::Initialize()
 //更新処理
 void UI::Update()
 {
+
 	++cnt;
 	if (cnt >= 6000)
 	{
@@ -45,8 +47,17 @@ void UI::Update()
 //描画処理
 void UI::Draw()
 {
-	DrawGraph(0, 25, Num[(cnt % 10000) / 1000], TRUE);
-	DrawGraph(20, 25, Num[(cnt % 1000) / 100], TRUE);
+	DrawFormatString(520, 10, GetColor(0, 255, 0), "制限時間");
+	DrawGraph(520, 30, Num[(cnt % 10000) / 1000], TRUE);
+	DrawGraph(540, 30, Num[(cnt % 1000) / 100], TRUE);
+
+	/*DrawFormatString(520, 10, GetColor(0, 255, 0), "スコア");
+	DrawGraph(520, 30,  , TRUE);*/
+
+
+
+	//DrawFormatString(550, 350, GetColor(0, 255, 0), "%d", life);
+
 
 }
 
