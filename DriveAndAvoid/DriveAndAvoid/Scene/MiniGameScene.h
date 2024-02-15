@@ -24,6 +24,7 @@ private:
     int bakuhatu;
 
     int BGM;
+    int BGM2;
     int help;
 
     
