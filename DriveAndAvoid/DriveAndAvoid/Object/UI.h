@@ -9,6 +9,7 @@ private:
 	int cnt;
 	bool timeFlg;
 	int score;
+	int startcnt;
 public:
 	UI();
 	~UI();

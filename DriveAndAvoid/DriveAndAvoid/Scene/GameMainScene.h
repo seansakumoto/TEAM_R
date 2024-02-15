@@ -25,7 +25,9 @@ private:
     int image;              // 新しく追加した変数
     int enemy_count[3];     // 通り過ぎた敵カウント
     int BGM;
+    int hitSound;
     float timer;
+    int startcnt;
     bool pause_flag;        //ポーズ
     Player* player;         // プレイヤー
     Enemy** enemy;          // 敵

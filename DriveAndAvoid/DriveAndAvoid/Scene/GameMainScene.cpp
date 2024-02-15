@@ -26,6 +26,7 @@ GameMainScene::~GameMainScene()
 void GameMainScene::Initialize()
 {
 	score = 0;
+	startcnt = 240;
 	//高得点値を読み込む
 	ReadHighScore();
 
@@ -94,66 +95,69 @@ eSceneType GameMainScene::Update()
 	//	isBGMPlaying = true; // BGMが再生されている状態に更新する
 	//}
 
-	// ポーズボタンが押されたらポーズフラグを切り替える
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-	{
-		pause_flag = !pause_flag;
 
-	}
-
-	// ポーズフラグが立っている場合は更新処理を行わない
-	if (pause_flag)
-	{
-		StopSoundMem(BGM);
-		return GetNowScene();
-	}
-	else
-	{
-		// ポーズフラグが立っていない場合の処理を記述する
-
-		if (CheckSoundMem(BGM) == false) {
-
-			PlaySoundMem(BGM, DX_PLAYTYPE_BACK,false);
-		}
-		// プレイヤーの更新
-		player->Update();
-		ui->Update();
-
-		// 移動距離の更新
-		mileage += (int)player->GetSpeed() + 5;
-
-		// 敵生成処理
-		if (mileage / 20 % 100 == 0)
+	startcnt--;
+	if (startcnt <= 0) {
+		// ポーズボタンが押されたらポーズフラグを切り替える
+		if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 		{
-			for (int i = 0; i < 4; i++)
+			pause_flag = !pause_flag;
+
+		}
+
+		// ポーズフラグが立っている場合は更新処理を行わない
+		if (pause_flag)
+		{
+			StopSoundMem(BGM);
+			return GetNowScene();
+		}
+		else
+		{
+			// ポーズフラグが立っていない場合の処理を記述する
+
+			if (CheckSoundMem(BGM) == false) {
+
+				PlaySoundMem(BGM, DX_PLAYTYPE_BACK, false);
+			}
+			// プレイヤーの更新
+			player->Update();
+			ui->Update();
+
+			// 移動距離の更新
+			mileage += (int)player->GetSpeed() + 5;
+
+			// 敵生成処理
+			if (mileage / 20 % 100 == 0)
 			{
-				if (enemy[i] == nullptr)
+				for (int i = 0; i < 4; i++)
 				{
-					int type = GetRand(3) % 3;
-					enemy[i] = new Enemy(type, image);
-					enemy[i]->Initialize();
-					break;
+					if (enemy[i] == nullptr)
+					{
+						int type = GetRand(3) % 3;
+						enemy[i] = new Enemy(type, image);
+						enemy[i]->Initialize();
+						break;
+					}
 				}
 			}
-		}
 
-		// 敵の更新と当たり判定チェック
-		for (int i = 0; i < 4; i++)
-		{
-			if (enemy[i] != nullptr)
+			// 敵の更新と当たり判定チェック
+			for (int i = 0; i < 4; i++)
 			{
-				enemy[i]->Updata(player->GetSpeed());
-
-				// 画面外に行ったら、敵を削除してスコア加算
-				if (enemy[i]->GetLocation().y >= 640.0f)
+				if (enemy[i] != nullptr)
 				{
-					enemy_count[enemy[i]->GetType()]++;
-					//スコアを計算する
-					score += 100;
-					enemy[i]->Finalize();
-					delete enemy[i];
-					enemy[i] = nullptr;
-				}
+					enemy[i]->Updata(player->GetSpeed());
+
+					// 画面外に行ったら、敵を削除してスコア加算
+					if (enemy[i]->GetLocation().y >= 640.0f)
+					{
+						enemy_count[enemy[i]->GetType()]++;
+						//スコアを計算する
+						score += 100;
+						enemy[i]->Finalize();
+						delete enemy[i];
+						enemy[i] = nullptr;
+					}
 
 				// 当たり判定の確認
 				if (IsHitCheck(player, enemy[i]))
@@ -162,8 +166,7 @@ eSceneType GameMainScene::Update()
 					enemy[i]->Finalize();
 					delete enemy[i];
 					enemy[i] = nullptr;
-					// 当たったら移動
-					return eSceneType::E_MINIGAME;
+					player->DecLife();
 				}
 			}
 		}
@@ -171,17 +174,17 @@ eSceneType GameMainScene::Update()
 		// 残機が0になるとリザルト画面に遷移する
 		if (player->GetLife() < 0)
 		{
-			return eSceneType::E_RESULT;
+			return eSceneType::E_MINIGAME;
 		}
 
-		// 制限時間を超えたらリザルトに遷移する
-		if (ui->GetTimeFlg() == true)
-		{
-			return eSceneType::E_RESULT;
-		}
+			// 制限時間を超えたらリザルトに遷移する
+			if (ui->GetTimeFlg() == true)
+			{
+				return eSceneType::E_RESULT;
+			}
 
-    }
-   
+		}
+	}
 
     return GetNowScene();
 }
@@ -189,6 +192,7 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw()const
 {
+	
 	//背景画像の描画
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
@@ -212,18 +216,24 @@ void GameMainScene::Draw()const
 	{
 		DrawGraph(0, 0, pause_image, TRUE);
 	}
-
-
-
-	//デバッグ用
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "Time:%f", timer);
-	//仮ハイスコア用
-	DrawFormatString(0, 50, GetColor(255, 255, 255), "ハイスコア:%08d", score);
-	//仮スピード用
-	DrawFormatString(0, 100, GetColor(255, 255, 255), "スピード:%08.1f", player->GetSpeed());
-	//仮走行距離用
-	DrawFormatString(0, 150, GetColor(255, 255, 255), "走行距離:%08d", mileage / 10);
 	ui->Draw();
+
+	
+	//スタートのカウント
+	SetFontSize(50);
+	if (startcnt >= 180) {
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "3");
+	}
+	if (startcnt >= 120 && startcnt < 180) {
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "2");
+	}
+	if (startcnt >= 60 && startcnt < 120) {
+		DrawFormatString(225, 240, GetColor(0, 255, 0), "1");
+	}
+	if (startcnt >= 0 && startcnt < 60) {
+		DrawFormatString(155, 240, GetColor(0, 255, 0), "スタート");
+	}
+	
 }
 
 
