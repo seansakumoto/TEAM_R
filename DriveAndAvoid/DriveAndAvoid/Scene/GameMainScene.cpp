@@ -180,7 +180,7 @@ eSceneType GameMainScene::Update()
 			// §ŒÀŽžŠÔ‚ð’´‚¦‚½‚çƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
 			if (ui->GetTimeFlg() == true)
 			{
-				return eSceneType::E_RESULT;
+				return eSceneType::E_MINIGAME;
 			}
 
 		}

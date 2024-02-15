@@ -164,7 +164,7 @@
 
 		// すべての画像が非表示になった場合はE_ENDを返す
 		if (allImagesHidden) {
-			return eSceneType::E_END;
+			return eSceneType::E_TITLE;
 		}
 
 		// 10秒経過していない場合はまだこのシーンを続ける
