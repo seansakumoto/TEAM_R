@@ -27,6 +27,7 @@ private:
     int BGM;
     int hitSound;
     float timer;
+    int startcnt;
     bool pause_flag;        //ポーズ
     Player* player;         // プレイヤー
     Enemy** enemy;          // 敵

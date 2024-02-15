@@ -18,6 +18,7 @@ UI::~UI()
 void UI::Initialize()
 {
 	cnt = 0;
+	startcnt = 180;
 	timeFlg = false;
 
 	//画像の読み込み
@@ -34,12 +35,14 @@ void UI::Initialize()
 //更新処理
 void UI::Update()
 {
+	
+		++cnt;
+		if (cnt >= 6000)
+		{
+			timeFlg = true;
+		}
 
-	++cnt;
-	if (cnt >= 6000)
-	{
-		timeFlg = true;
-	}
+	
 
 }
 
@@ -50,6 +53,8 @@ void UI::Draw()
 	DrawFormatString(520, 10, GetColor(0, 255, 0), "制限時間");
 	DrawGraph(520, 30, Num[(cnt % 10000) / 1000], TRUE);
 	DrawGraph(540, 30, Num[(cnt % 1000) / 100], TRUE);
+
+	
 
 	/*DrawFormatString(520, 10, GetColor(0, 255, 0), "スコア");
 	DrawGraph(520, 30,  , TRUE);*/
