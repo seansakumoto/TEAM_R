@@ -14,6 +14,7 @@ private:
 	float speed;        //‘¬‚³
 	int invincible;     //–³“Gó‘Ô
 	int reviv;          //•œŠˆ‚Ì‰‰oŠÔŠu
+	int sound_effect[4];//Œø‰Ê‰¹
 	//float hp;           //‘Ì—Í
 	//float fuel;         //”R—¿
 	int barrier_count;  //ƒoƒŠƒA‚Ì–‡”

@@ -22,27 +22,58 @@ Player::~Player()
 void Player::Initialize()
 {
 	is_active = true;
-	location = Vector2D(250.0f, 480.0f/5.0f*4);
-	box_size = Vector2D(31.0f, 60.0f);
+	location = Vector2D(250.0f, 480.0f / 5.0f * 4);
+	box_size = Vector2D(31.0f, 30.0f);
 	angle = 0.0f;
 	speed = 7.0f;//プレイヤーの速度デフォルト5
 	barrier_count = 3;
 	life = 3;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/car1pol.bmp");
-
-	avoidSE = LoadSoundMem("Resource/sounds/avoid.ogg");
-	breakSE = LoadSoundMem("Resource/sounds/break.ogg");
-	hitSE = LoadSoundMem("Resource/sounds/hit.ogg");
-	moveSE = LoadSoundMem("Resource/sounds/move.ogg");
-
+	image = LoadGraph("Resource/images/player.png");
 
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resource/images/car1pol.bmpがありません\n");
+		throw("Resource/images/player.pngがありません\n");
 	}
+
+
+	//SEの読み込み
+	sound_effect[0] = LoadSoundMem("Resource/sounds/SE_player_move.ogg");
+	sound_effect[1] = LoadSoundMem("Resource/sounds/SE_player_avoid.ogg");
+	sound_effect[2] = LoadSoundMem("Resource/sounds/SE_player_hit.ogg");
+	sound_effect[3] = LoadSoundMem("Resource/sounds/SE_player_break.ogg");
+
+	//エラーチェック
+	if (sound_effect[0] == -1)
+	{
+		throw("Resource/sounds/SE_player_move.oggが無いよぅ");
+	}
+
+	//エラーチェック
+	if (sound_effect[1] == -1)
+	{
+		throw("Resource/sounds/SE_player_avoid.oggが無いよぅ");
+	}
+
+	//エラーチェック
+	if (sound_effect[2] == -1)
+	{
+		throw("Resource/sounds/SE_player_hit.oggが無いよぉ");
+	}
+
+	//エラーチェック
+	if (sound_effect[3] == -1)
+	{
+		throw("Resource/sounds/SE_player_break.oggが無いよぃ");
+	}
+
+	//音量の調整
+	ChangeVolumeSoundMem(200, sound_effect[0]);
+	ChangeVolumeSoundMem(200, sound_effect[1]);
+	ChangeVolumeSoundMem(200, sound_effect[2]);
+	ChangeVolumeSoundMem(200, sound_effect[3]);
 }
 
 
@@ -64,6 +95,8 @@ void Player::Update()
 			barrier = new Barrier;
 			invincible = 0;
 			reviv = 30;
+			PlaySoundMem(sound_effect[2], DX_PLAYTYPE_BACK, TRUE);
+			PlaySoundMem(sound_effect[3], DX_PLAYTYPE_BACK, TRUE);
 		}
 	}
 
@@ -74,8 +107,13 @@ void Player::Update()
 
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
-		
+
 	}
+
+	/*if (CheckSoundMem(sound_effect[0]) == 0)
+	{
+		PlaySoundMem(sound_effect[0], DX_PLAYTYPE_BACK, TRUE);
+	}*/
 
 	//バリア処理
 	/*if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
@@ -136,6 +174,7 @@ void Player::Draw()
 	//{
 	//	barrier->Draw(this->location);
 	//}
+
 }
 
 
@@ -150,11 +189,6 @@ void Player::Finalize()
 	{
 		delete barrier;
 	}
-	DeleteSoundMem(avoidSE);
-	DeleteSoundMem(breakSE);
-	DeleteSoundMem(hitSE);
-	DeleteSoundMem(moveSE);
-
 }
 
 
@@ -163,7 +197,6 @@ void Player::SetActive(bool flg)
 {
 	this->is_active = flg;
 }
-
 
 
 void Player::DecLife()
@@ -217,8 +250,8 @@ bool Player::IsBarrier()const
 void Player::Movement()
 {
 	Vector2D move = Vector2D(0.0f);
-	float MoveSizeX = 100;
-	float MoveSizeY = 480 / 5;
+	float MoveSizeX = 50;
+	float MoveSizeY = 40;
 	angle = 0.0f;
 	//
 	//
@@ -271,11 +304,13 @@ void Player::Movement()
 	{
 		move += Vector2D(-MoveSizeX, 0.0f);
 		angle = -DX_PI_F / 18;
+		PlaySoundMem(sound_effect[1], DX_PLAYTYPE_BACK,TRUE);
 	}
 	else if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
 	{
 		move += Vector2D(MoveSizeX, 0.0f);
 		angle = DX_PI_F / 18;
+		PlaySoundMem(sound_effect[1], DX_PLAYTYPE_BACK, TRUE);
 	}
 	else if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
 	{

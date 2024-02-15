@@ -19,7 +19,7 @@ void Enemy::Initialize()//105*40 X Y B A
 	
 		//出現させるX座標パターンを取得
 	
-		float random_x = (float)(1* 105 + 40);
+		float random_x = (float)(GetRand(4)* 105 + 40);
 
 		//生成位置の設定
 		location = Vector2D(random_x, -50.0f);
@@ -35,7 +35,7 @@ void Enemy::Initialize()//105*40 X Y B A
 }
 
 
-void Enemy::Update(float speed)
+void Enemy::Updata(float speed)
 {
 	//位置情報に移動量を加算する
 	

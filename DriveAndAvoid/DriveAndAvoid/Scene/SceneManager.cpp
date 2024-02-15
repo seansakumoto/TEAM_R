@@ -8,6 +8,8 @@
 #include "RankingDispScene.h"
 #include "RankingInputScene.h"
 
+#include"MiniGameScene.h"
+
 SceneManager::SceneManager() :current_scene(nullptr)
 {
 
@@ -177,6 +179,9 @@ SceneBase* SceneManager::CreateScene(eSceneType scene_type)
 
 		case eSceneType::E_RANKING_INPUT:
 			return new RankingInputScene;
+
+		case eSceneType::E_MINIGAME:
+			return new MiniGameScene;
 
 		default:
 			return nullptr;
