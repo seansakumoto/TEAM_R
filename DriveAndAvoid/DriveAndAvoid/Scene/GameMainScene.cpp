@@ -167,8 +167,6 @@ eSceneType GameMainScene::Update()
 					delete enemy[i];
 					enemy[i] = nullptr;
 					player->DecLife();
-					// “–‚½‚Á‚½‚çˆÚ“®
-					//return eSceneType::E_MINIGAME;
 				}
 			}
 		}
