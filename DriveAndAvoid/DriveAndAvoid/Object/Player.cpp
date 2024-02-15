@@ -189,6 +189,10 @@ void Player::Finalize()
 	{
 		delete barrier;
 	}
+	DeleteSoundMem(avoidSE);
+	DeleteSoundMem(breakSE);
+	DeleteSoundMem(hitSE);
+	DeleteSoundMem(moveSE);
 }
 
 
