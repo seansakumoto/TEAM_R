@@ -102,15 +102,15 @@ void Player::Update()
 		}
 		return;*/
 
-		////“G‚É‚Ô‚Â‚©‚Á‚½‚Æ‚«‚Ìˆ—
-		//if (barrier == nullptr)
-		//{
-		//	barrier = new Barrier;
-		//	invincible = 0;
-		//	reviv = 30;
-		//	PlaySoundMem(sound_effect[2], DX_PLAYTYPE_BACK, TRUE);
-		//	PlaySoundMem(sound_effect[3], DX_PLAYTYPE_BACK, TRUE);
-		//}
+		//“G‚É‚Ô‚Â‚©‚Á‚½‚Æ‚«‚Ìˆ—
+		if (barrier == nullptr)
+		{
+			barrier = new Barrier;
+			invincible = 0;
+			reviv = 30;
+			PlaySoundMem(sound_effect[2], DX_PLAYTYPE_BACK, TRUE);
+			PlaySoundMem(sound_effect[3], DX_PLAYTYPE_BACK, TRUE);
+		}
 	}
 
 
@@ -147,6 +147,8 @@ void Player::Update()
 			delete barrier;
 			barrier = nullptr;
 			is_active = true;
+			invincible == 0;
+			reviv = 30;
 		}
 	}
 }
@@ -161,6 +163,7 @@ void Player::Draw()
 		if (invincible<reviv/2)
 		{
 			DrawRotaGraphF(location.x, location.y, 1.0f, angle, image, TRUE);
+			invincible++;
 		}
 		else
 		{
@@ -266,7 +269,7 @@ void Player::Movement()
 {
 	Vector2D move = Vector2D(0.0f);
 	float MoveSizeX = 50;
-	float MoveSizeY = 40;
+	float MoveSizeY = 80;
 	angle = 0.0f;
 	//
 	//
