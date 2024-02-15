@@ -13,7 +13,7 @@ private:
 
     // ここにメンバ変数を宣言
     // DxLibで提供されているVECTOR2D構造体を使う
-    VECTOR imagePositions[10]; // 画像の表示位置
+    std::vector<VECTOR> imagePositions; // 画像の表示位置
     int color[4]; // 画像の色
 
     std::vector<int> currentImageIndex; // 現在の画像のインデックスを保持する配列
@@ -28,7 +28,7 @@ public:
     virtual eSceneType Update() override;
     virtual void Draw() const override;
     virtual void Finalize() override;
-
+    void HideImageByButton(int buttonIndex);
 
     virtual eSceneType GetNowScene() const override;
 };
