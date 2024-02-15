@@ -1,21 +1,12 @@
 #pragma once
-
 #include "SceneBase.h"
-
-class TitleScene:public SceneBase
+class CreditScene:public SceneBase
 {
 private:
-
-private:
-	int background_image;
-	int credit_image;    //クレジット画面
-	int menu_image;
-	int cursor_image;
-	int menu_cursor;
-
+	int back_image;
 public:
-	TitleScene();
-	virtual ~TitleScene();
+	CreditScene();
+	virtual ~CreditScene();
 
 	virtual void  Initialize() override;
 	virtual eSceneType Update() override;

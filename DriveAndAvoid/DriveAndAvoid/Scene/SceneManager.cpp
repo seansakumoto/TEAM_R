@@ -2,6 +2,7 @@
 #include "../Utility/InputControl.h"
 #include "DxLib.h"
 #include "TitleScene.h"
+#include "CreditScene.h"
 #include "GameMainScene.h"
 #include "ResultScene.h"
 #include "HelpScene.h"

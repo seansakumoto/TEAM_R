@@ -46,41 +46,52 @@ void Player::Initialize()
 	sound_effect[3] = LoadSoundMem("Resource/sounds/SE_player_break.ogg");
 
 	//エラーチェック
-	if (sound_effect[0] == -1)
+	for (int i = 0; i < 4; i++)
 	{
-		throw("Resource/sounds/SE_player_move.oggが無いよぅ");
+		if (sound_effect[i]==-1)
+		{
+			throw("Resource/sounds/SE_player[%d]が見つかりません", i);
+		}
 	}
+	//if (sound_effect[0] == -1)
+	//{
+	//	throw("Resource/sounds/SE_player_move.oggが無いよぅ");
+	//}
 
-	//エラーチェック
-	if (sound_effect[1] == -1)
-	{
-		throw("Resource/sounds/SE_player_avoid.oggが無いよぅ");
-	}
+	////エラーチェック
+	//if (sound_effect[1] == -1)
+	//{
+	//	throw("Resource/sounds/SE_player_avoid.oggが無いよぅ");
+	//}
 
-	//エラーチェック
-	if (sound_effect[2] == -1)
-	{
-		throw("Resource/sounds/SE_player_hit.oggが無いよぉ");
-	}
+	////エラーチェック
+	//if (sound_effect[2] == -1)
+	//{
+	//	throw("Resource/sounds/SE_player_hit.oggが無いよぉ");
+	//}
 
-	//エラーチェック
-	if (sound_effect[3] == -1)
-	{
-		throw("Resource/sounds/SE_player_break.oggが無いよぃ");
-	}
+	////エラーチェック
+	//if (sound_effect[3] == -1)
+	//{
+	//	throw("Resource/sounds/SE_player_break.oggが無いよぃ");
+	//}
 
 	//音量の調整
-	ChangeVolumeSoundMem(200, sound_effect[0]);
+	for (int i = 0; i < 4; i++)
+	{
+		ChangeVolumeSoundMem(200, sound_effect[i]);
+	}
+	/*ChangeVolumeSoundMem(200, sound_effect[0]);
 	ChangeVolumeSoundMem(200, sound_effect[1]);
 	ChangeVolumeSoundMem(200, sound_effect[2]);
-	ChangeVolumeSoundMem(200, sound_effect[3]);
+	ChangeVolumeSoundMem(200, sound_effect[3]);*/
 }
 
 
 //更新処理
 void Player::Update()
 {
-	//操作不可状態であれば、自身を回転させる
+	//操作不可状態
 	if (!is_active)
 	{
 		/*angle += DX_PI_F / 24.0f;
@@ -90,14 +101,16 @@ void Player::Update()
 			is_active = true;
 		}
 		return;*/
-		if (barrier == nullptr)
-		{
-			barrier = new Barrier;
-			invincible = 0;
-			reviv = 30;
-			PlaySoundMem(sound_effect[2], DX_PLAYTYPE_BACK, TRUE);
-			PlaySoundMem(sound_effect[3], DX_PLAYTYPE_BACK, TRUE);
-		}
+
+		////敵にぶつかったときの処理
+		//if (barrier == nullptr)
+		//{
+		//	barrier = new Barrier;
+		//	invincible = 0;
+		//	reviv = 30;
+		//	PlaySoundMem(sound_effect[2], DX_PLAYTYPE_BACK, TRUE);
+		//	PlaySoundMem(sound_effect[3], DX_PLAYTYPE_BACK, TRUE);
+		//}
 	}
 
 
@@ -110,10 +123,10 @@ void Player::Update()
 
 	}
 
-	/*if (CheckSoundMem(sound_effect[0]) == 0)
+	if (CheckSoundMem(sound_effect[0]) == 0)
 	{
 		PlaySoundMem(sound_effect[0], DX_PLAYTYPE_BACK, TRUE);
-	}*/
+	}
 
 	//バリア処理
 	/*if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)

@@ -10,6 +10,7 @@ enum eSceneType
 	E_RANKING_INPUT,
 	E_RESULT,
 	E_END,
+	E_CREDIT,
 	E_MINIGAME
 };
 
