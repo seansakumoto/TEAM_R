@@ -47,7 +47,7 @@ void SceneManager::Initialize()
 	}
 
 	//タイトルシーンから始める
-	ChangeScene(eSceneType::E_MINIGAME);
+	ChangeScene(eSceneType::E_TITLE);
 }
 
 
