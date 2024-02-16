@@ -7,6 +7,7 @@
 #include"MiniGameScene.h"
 
 
+
 class GameMainScene : public SceneBase
 {
 private:
@@ -22,7 +23,8 @@ private:
     int pause;
     int score;
     //int enemy_image[3];     // “G‰æ‘œ
-    int image;              // V‚µ‚­’Ç‰Á‚µ‚½•Ï”
+    int image; // 1‘Ì–Ú‚Ì“G‚Ì‰æ‘œ
+    int image2;//2‘Ì–Ú‚Ì“G‚Ì‰æ‘œ
     int enemy_count[3];     // ’Ê‚è‰ß‚¬‚½“GƒJƒEƒ“ƒg
     int BGM;
     int hitSound;
@@ -34,7 +36,7 @@ private:
     UI* ui;
 
 
-
+  
     
 public:
     GameMainScene();
@@ -53,4 +55,6 @@ private:
     void ReadHighScore();
     // “–‚½‚è”»’è
     bool IsHitCheck(Player* p, Enemy* e);
+
+
 };

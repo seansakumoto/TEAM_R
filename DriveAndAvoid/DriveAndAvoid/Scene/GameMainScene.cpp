@@ -30,15 +30,16 @@ void GameMainScene::Initialize()
 	//高得点値を読み込む
 	ReadHighScore();
 
-    //画像の読み込み
-    back_ground = LoadGraph("Resource/images/back.bmp");
-    barrier_image = LoadGraph("Resource/images/barrier.png");
-    //int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,enemy_image);
-    // 
-    // LoadGraphで敵の画像を読み込む
-    image = LoadGraph("Resource/images/barikedo1.png");
-    //ポーズ画像
-    pause_image = LoadGraph("Resource/images/pause1.png");
+	//画像の読み込み
+	back_ground = LoadGraph("Resource/images/back.bmp");
+	barrier_image = LoadGraph("Resource/images/barrier.png");
+	//int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,enemy_image);
+	// 
+	// 敵の画像を読み込む
+	image = LoadGraph("Resource/images/barikedo1.png");
+	image2 = LoadGraph("Resource/images/enemy.png");
+	//ポーズ画像
+	pause_image = LoadGraph("Resource/images/pause1.png");
 
 	BGM = LoadSoundMem("Resource/sounds/Ride_out.mp3");
 
@@ -78,31 +79,23 @@ void GameMainScene::Initialize()
 	player->Initialize();
 	ui->Initialize();
 
-    for (int i = 0; i < 4; i++)
-    {
-        enemy[i] = nullptr;
-    }
-    //
-    pause_flag = FALSE;
+	for (int i = 0; i < 4; i++)
+	{
+		enemy[i] = nullptr;
+	}
+	//
+	pause_flag = FALSE;
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
-	//// BGMが再生されておらず、再生フラグが立っている場合は再生する
-	//if (!isBGMPlaying && CheckSoundMem(BGM) == false) {
-	//	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
-	//	isBGMPlaying = true; // BGMが再生されている状態に更新する
-	//}
-
-
 	startcnt--;
 	if (startcnt <= 0) {
 		// ポーズボタンが押されたらポーズフラグを切り替える
 		if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 		{
 			pause_flag = !pause_flag;
-
 		}
 
 		// ポーズフラグが立っている場合は更新処理を行わない
@@ -116,9 +109,9 @@ eSceneType GameMainScene::Update()
 			// ポーズフラグが立っていない場合の処理を記述する
 
 			if (CheckSoundMem(BGM) == false) {
-
 				PlaySoundMem(BGM, DX_PLAYTYPE_BACK, false);
 			}
+
 			// プレイヤーの更新
 			player->Update();
 			ui->Update();
@@ -146,69 +139,81 @@ eSceneType GameMainScene::Update()
 			{
 				if (enemy[i] != nullptr)
 				{
+					// スピードはプレイヤーのスピードに合わせる
 					enemy[i]->Updata(player->GetSpeed());
 
 					// 画面外に行ったら、敵を削除してスコア加算
 					if (enemy[i]->GetLocation().y >= 640.0f)
 					{
 						enemy_count[enemy[i]->GetType()]++;
-						//スコアを計算する
+						// スコアを計算する
 						score += 100;
 						enemy[i]->Finalize();
 						delete enemy[i];
 						enemy[i] = nullptr;
 					}
 
-				// 当たり判定の確認
-				if (IsHitCheck(player, enemy[i]))
-				{
-					player->SetActive(false);
-					enemy[i]->Finalize();
-					delete enemy[i];
-					enemy[i] = nullptr;
-					player->DecLife();
+					// 当たり判定の確認
+					if (IsHitCheck(player, enemy[i]))
+					{
+						player->SetActive(false);
+						enemy[i]->Finalize();
+						delete enemy[i];
+						enemy[i] = nullptr;
+						player->DecLife();
+					}
 				}
 			}
-		}
 
-		// 残機が0になるとリザルト画面に遷移する
-		if (player->GetLife() < 0)
-		{
-			return eSceneType::E_MINIGAME;
-		}
+			// 残機が0になるとリザルト画面に遷移する
+			if (player->GetLife() < 0)
+			{
+				return eSceneType::E_MINIGAME;
+			}
 
 			// 制限時間を超えたらリザルトに遷移する
 			if (ui->GetTimeFlg() == true)
 			{
 				return eSceneType::E_MINIGAME;
 			}
-
 		}
 	}
 
-    return GetNowScene();
+	return GetNowScene();
 }
 
-//描画処理
-void GameMainScene::Draw()const
+
+
+// GameMainSceneクラスのDrawメソッド
+void GameMainScene::Draw() const
 {
-	
-	//背景画像の描画
+	// 背景画像の描画
 	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
-
-	
-
 	// 敵の描画
 	for (int i = 0; i < 4; i++)
 	{
 		if (enemy[i] != nullptr)
 		{
-			enemy[i]->Draw();
+			// 敵の位置情報を取得
+			Vector2D enemyPos = enemy[i]->GetLocation();
+
+			// 敵の画像を描画
+			if (i % 2 == 0) {
+				DrawGraph(static_cast<int>(enemyPos.x - 32), static_cast<int>(enemyPos.y - 32), image, TRUE);
+			}
+			else {
+				DrawGraph(static_cast<int>(enemyPos.x - 32), static_cast<int>(enemyPos.y - 32), image2, TRUE);
+			}
+
+			//// 当たり判定のサイズを描画
+			//Vector2D boxSize = enemy[i]->GetBoxSize();
+			//DrawBox(static_cast<int>(enemyPos.x - boxSize.x / 2), static_cast<int>(enemyPos.y - boxSize.y / 2),
+			//	static_cast<int>(enemyPos.x + boxSize.x / 2), static_cast<int>(enemyPos.y + boxSize.y / 2), GetColor(255, 0, 0), FALSE);
 		}
 	}
 
-	//プレイヤーの描画
+	// プレイヤーの描画
 	player->Draw();
 
 	// ポーズフラグが立っている場合のみポーズ画像を描画する
@@ -216,39 +221,44 @@ void GameMainScene::Draw()const
 	{
 		DrawGraph(0, 0, pause_image, TRUE);
 	}
+
 	ui->Draw();
-	//バリアの文字とバリア
+
+	// バリアの文字とバリア
 	SetFontSize(23);
-	DrawString(530, 300, "バリア", GetColor(255,0,0),TRUE);
-	//バリア枚数の描画
+	DrawString(530, 300, "バリア", GetColor(255, 0, 0), TRUE);
+
+	// バリア枚数の描画
 	for (int i = 0; i < player->GetBarrierCount(); i++)
 	{
 		DrawRotaGraph(540 + i * 25, 350, 0.2f, 0, barrier_image, TRUE, FALSE);
 	}
 
-	//スタートのカウント
+	// スタートのカウント
 	SetFontSize(50);
-	if (startcnt >= 180) {
+	if (startcnt >= 180)
+	{
 		DrawFormatString(240, 220, GetColor(0, 255, 0), "3");
 	}
-	if (startcnt >= 120 && startcnt < 180) {
+	if (startcnt >= 120 && startcnt < 180)
+	{
 		DrawFormatString(240, 220, GetColor(0, 255, 0), "2");
 	}
-	if (startcnt >= 60 && startcnt < 120) {
+	if (startcnt >= 60 && startcnt < 120)
+	{
 		DrawFormatString(240, 220, GetColor(0, 255, 0), "1");
 	}
-	if (startcnt >= 0 && startcnt < 60) {
+	if (startcnt >= 0 && startcnt < 60)
+	{
 		DrawFormatString(155, 220, GetColor(0, 255, 0), "スタート");
 	}
-
 }
-
 
 
 //終了時処理
 void GameMainScene::Finalize()
 {
-	
+
 
 	//リザルトデータの書き込み
 	FILE* fp = nullptr;

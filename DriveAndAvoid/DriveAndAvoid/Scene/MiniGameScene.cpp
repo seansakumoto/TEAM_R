@@ -1,38 +1,53 @@
-	#include "MiniGameScene.h"
-	#include "../Utility/InputControl.h"
-	#include "DxLib.h"
-	#include <chrono>
-	#include <cstdlib> 
-	#include <sstream> 
-	#include <iomanip> 
+#include "MiniGameScene.h"
+#include "../Utility/InputControl.h"
+#include "DxLib.h"
+#include <chrono>
+#include <cstdlib> 
+#include <sstream> 
+#include <iomanip> 
 
-	MiniGameScene::MiniGameScene() 
+MiniGameScene::MiniGameScene()
+{
+	// 乱数のシード値を設定する
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+	// BGMを読み込む
+	BGM = LoadSoundMem("Resource/sounds/goe.mp3");
+	BGM2 = LoadSoundMem("Resource/sounds/ok.mp3");
+
+	// BGMをループ再生する
+	PlaySoundMem(BGM, DX_PLAYTYPE_LOOP);
+}
+
+MiniGameScene::~MiniGameScene()
+{
+	// BGMの解放
+	DeleteSoundMem(BGM);
+}
+
+void MiniGameScene::Initialize()
+{
+	//help = LoadGraph("Resource/images/helpimage1.png");
+
+	// 初期表示フラグを設定
+	showHelp = true;
+	showImage = false;
+
+	// タイマーを初期化
+	startTime = std::chrono::system_clock::now();
+}
+
+// 更新処理
+eSceneType MiniGameScene::Update()
+{
+
+
+
+	// 5秒経過後、一度だけ画像を表示するフラグを立てる
+	if (!showImage)
 	{
-		// 乱数のシード値を設定する
-		std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
-		// BGMを読み込む
-		BGM = LoadSoundMem("Resource/sounds/goe.mp3");
-		BGM2 = LoadSoundMem("Resource/sounds/ok.mp3");
-
-		// BGMをループ再生する
-		PlaySoundMem(BGM, DX_PLAYTYPE_LOOP);
-	}
-
-	MiniGameScene::~MiniGameScene()
-	{
-		// BGMの解放
-		DeleteSoundMem(BGM);
-	}
-
-	void MiniGameScene::Initialize()
-	{
-		 
-		help = LoadGraph("Resource/images/helpimage1.png");
-
 		// 画像を読み込む
 		int image = LoadDivGraph("Resource/images/color.png", 4, 4, 1, 50, 50, color);
-
 		bakuhatu = LoadGraph("Resource/images/bakuhatu.png");
 
 		// 読み込みエラーチェック
@@ -76,158 +91,137 @@
 			currentImageIndex[i] = rand() % 4;
 		}
 
-		// 制限時間を設定
-		startTime = std::chrono::system_clock::now();
-
-
+		// 一度だけ画像を表示するフラグを設定
+		showImage = true;
 	}
 
-	// 更新処理
-	eSceneType MiniGameScene::Update()
+	// ボタンの状態を取得
+	bool buttonB = InputControl::GetButtonDown(XINPUT_BUTTON_B);
+	bool buttonX = InputControl::GetButtonDown(XINPUT_BUTTON_X);
+	bool buttonA = InputControl::GetButtonDown(XINPUT_BUTTON_A);
+	bool buttonY = InputControl::GetButtonDown(XINPUT_BUTTON_Y);
+
+	// 各ボタンが押されたかどうかを確認し、該当する画像を1個ずつ非表示にする
+	if (buttonB)
 	{
-
-		// ボタンの状態を取得
-		bool buttonB = InputControl::GetButtonDown(XINPUT_BUTTON_B);
-		bool buttonX = InputControl::GetButtonDown(XINPUT_BUTTON_X);
-		bool buttonA = InputControl::GetButtonDown(XINPUT_BUTTON_A);
-		bool buttonY = InputControl::GetButtonDown(XINPUT_BUTTON_Y);
-
-		// 各ボタンが押されたかどうかを確認し、該当する画像を1個ずつ非表示にする
-		if (buttonB)
-		{
-			HideImageByButton(0);
-		}
-		if (buttonX)
-		{
-			HideImageByButton(1);
-		}
-		if (buttonA)
-		{
-			HideImageByButton(2);
-		}
-		if (buttonY)
-		{
-			HideImageByButton(3);
-		}
-
-		// 画像の位置をランダムに移動させる
-		int numImages = static_cast<int>(imagePositions.size());
-		for (int i = 0; i < numImages; ++i)
-		{
-			// 画像の位置を少しランダムに変更
-			imagePositions[i].x += (rand() % 11) - 5; // -5から5までのランダムな数を加える
-			imagePositions[i].y += (rand() % 11) - 5; // -5から5までのランダムな数を加える
-
-			// 画像が画面外に出ないようにする
-			if (imagePositions[i].x < 0) imagePositions[i].x = 0;
-			if (imagePositions[i].x > (600 - 50)) imagePositions[i].x = 600 - 50;
-			if (imagePositions[i].y < 0) imagePositions[i].y = 0;
-			if (imagePositions[i].y > (400 - 50)) imagePositions[i].y = 400 - 50;
-		}
-
-		// 画面をクリア
-		ClearDrawScreen();
-
-		// 固定された位置にランダムな画像を表示
-		for (int i = 0; i < numImages; ++i)
-		{
-			if (currentImageIndex[i] != -1)
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
-			}
-			else
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
-			}
-		}
-
-		// 画面を更新
-		ScreenFlip();
-
-		// 固定された位置にランダムな画像を表示
-		bool allImagesHidden = true; // すべての画像が非表示かどうかを示すフラグ
-		for (int i = 0; i < numImages; ++i)
-		{
-			if (currentImageIndex[i] != -1)
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
-				allImagesHidden = false; // 一つでも表示されている画像があればフラグをfalseにする
-			}
-			else
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
-			}
-		}
-
-		// 画面を更新
-		ScreenFlip();
-
-		// すべての画像が非表示になった場合はE_ENDを返す
-		if (allImagesHidden) {
-			return eSceneType::E_TITLE;
-		}
-
-		// 10秒経過していない場合はまだこのシーンを続ける
-		return GetNowScene();
+		HideImageByButton(0);
 	}
-
-	// 描画処理
-	void MiniGameScene::Draw() const
+	if (buttonX)
 	{
-		// 画面をクリア
-		ClearDrawScreen();
+		HideImageByButton(1);
+	}
+	if (buttonA)
+	{
+		HideImageByButton(2);
+	}
+	if (buttonY)
+	{
+		HideImageByButton(3);
+	}
 
-	
+	// 画像の位置をランダムに移動させる
+	int numImages = static_cast<int>(imagePositions.size());
+	for (int i = 0; i < numImages; ++i)
+	{
+		// 画像の位置を少しランダムに変更
+		imagePositions[i].x += (rand() % 51) - 25;
+		imagePositions[i].y += (rand() % 51) - 25;
 
-		// 固定された位置にランダムな画像を表示
-		int numImages = static_cast<int>(imagePositions.size());
-		for (int i = 0; i < numImages; ++i)
+		// 画像が画面外に出ないようにする
+		if (imagePositions[i].x < 0) imagePositions[i].x = 0;
+		if (imagePositions[i].x > (600 - 50)) imagePositions[i].x = 600 - 50;
+		if (imagePositions[i].y < 0) imagePositions[i].y = 0;
+		if (imagePositions[i].y > (400 - 50)) imagePositions[i].y = 400 - 50;
+	}
+
+	// 画面をクリア
+	ClearDrawScreen();
+
+	// 固定された位置にランダムな画像を表示
+	for (int i = 0; i < numImages; ++i)
+	{
+		if (currentImageIndex[i] != -1)
 		{
-			if (currentImageIndex[i] != -1)
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
-			}
-			else
-			{
-				DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
-			}
+			DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
 		}
-
-		// 画面を更新
-		ScreenFlip();
-
-	}
-
-	// ボタンに応じて画像を非表示にする関数
-	void MiniGameScene::HideImageByButton(int buttonIndex)
-	{
-		// すべての画像を調べて、対応するボタンと一致する画像があれば最初の1つだけ非表示にする
-		int numImages = static_cast<int>(imagePositions.size());
-		for (int i = 0; i < numImages; ++i)
+		else
 		{
-			if (currentImageIndex[i] == buttonIndex)
-			{
-				// ボタンに対応する画像が見つかった場合は、その画像のインデックスを初期化することで非表示にする
-				// また、対応するSEを再生する
-				PlaySoundMem(BGM2, DX_PLAYTYPE_BACK);
-				currentImageIndex[i] = -1;
-				break; // 最初の1つだけ非表示にするため、見つかったらループを抜ける
-			}
+			DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
 		}
 	}
 
-	// 終了処理
-	void MiniGameScene::Finalize()
-	{
+	// 画面を更新
+	ScreenFlip();
 
+	// すべての画像が非表示になった場合はE_ENDを返す
+	bool allImagesHidden = true; // すべての画像が非表示かどうかを示すフラグ
+	for (int i = 0; i < numImages; ++i)
+	{
+		if (currentImageIndex[i] != -1)
+		{
+			allImagesHidden = false; // 一つでも表示されている画像があればフラグをfalseにする
+			break;
+		}
+	}
+
+	if (allImagesHidden) {
+		return eSceneType::E_TITLE;
 	}
 
 
+	// 10秒経過していない場合はまだこのシーンを続ける
+	return GetNowScene();
+}
 
+// 描画処理
+void MiniGameScene::Draw() const
+{
+	DrawString(0, 0, "aaaa", GetColor(255, 255, 255));
+	// 画面をクリア
+	ClearDrawScreen();
 
-	// 現在のシーン情報を取得
-	eSceneType MiniGameScene::GetNowScene() const
+	// 固定された位置にランダムな画像を表示
+	int numImages = static_cast<int>(imagePositions.size());
+	for (int i = 0; i < numImages; ++i)
 	{
-		return eSceneType::E_MINIGAME;
+		if (currentImageIndex[i] != -1)
+		{
+			DrawGraph(imagePositions[i].x, imagePositions[i].y, color[currentImageIndex[i]], TRUE); // 画像を表示
+		}
+		else
+		{
+			DrawGraph(imagePositions[i].x, imagePositions[i].y, bakuhatu, TRUE); // 爆発画像を表示
+		}
 	}
 
+	// 画面を更新
+	ScreenFlip();
+}
+
+// ボタンに応じて画像を非表示にする関数
+void MiniGameScene::HideImageByButton(int buttonIndex)
+{
+	// すべての画像を調べて、対応するボタンと一致する画像があれば最初の1つだけ非表示にする
+	int numImages = static_cast<int>(imagePositions.size());
+	for (int i = 0; i < numImages; ++i)
+	{
+		if (currentImageIndex[i] == buttonIndex)
+		{
+			// ボタンに対応する画像が見つかった場合は、その画像のインデックスを初期化することで非表示にする
+			// また、対応するSEを再生する
+			PlaySoundMem(BGM2, DX_PLAYTYPE_BACK);
+			currentImageIndex[i] = -1;
+			break; // 最初の1つだけ非表示にするため、見つかったらループを抜ける
+		}
+	}
+}
+
+// 終了処理
+void MiniGameScene::Finalize()
+{
+}
+
+// 現在のシーン情報を取得
+eSceneType MiniGameScene::GetNowScene() const {
+	return eSceneType::E_MINIGAME;
+}

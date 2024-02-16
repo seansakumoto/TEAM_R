@@ -27,7 +27,8 @@ private:
     int BGM2;
     int help;
 
-    
+    int showHelp;
+    int showImage;
 public:
     MiniGameScene();
     virtual ~MiniGameScene();
